@@ -1,106 +1,100 @@
-# tomcat-docker-public
-
-tomcat(java)/apache/mysql稼働環境
-
-maven開発環境
-
-## コンテナ構成
+## Container configuration
 
 apache(httpd)
 tomcat(Ver.9)
 mysql(5.7.33)
-adminer
-maven開発(openjdk11)
+admin
+Maven development (openjdk11)
 
-## コンテナ展開方法
+## How to deploy containers
 
 ```bash
-git clone https://github.com/naritomo08/tomcat-docker-public.git
+git clone https://github.com/emsnguyen/tomcat-docker-public.git
 cd tomcat-docker-public
 docker-compose up -d
-```
+````
 
-## tomcatプロジェクトURL
-
-```bash
-http://localhost:8080/warファイル名/
-```
-
-## apache(httpd)プロジェクトURL
+## tomcat project URL
 
 ```bash
-http://localhost/warファイル名/
-```
+http://localhost:8080/war file name/
+````
 
-## adminer(DB管理ツール)
+## apache(httpd) project URL
+
+```bash
+http://localhost/war file name/
+````
+
+## admin (DB management tool)
 
 http://localhost:8081
 
-* ログイン情報
-  - サーバ: mysql_db
-  - ユーザ名: tomcat
-  - パスワード: password
-  - データベース: tomcatdb
+* Login information
+   - Server: mysql_db
+   - Username: tomcat
+   - Password: password
+   - Database: tomcatdb
 
-## maven(java)開発環境
+## maven (java) development environment
 
-### コンテナログイン
+### Container login
 
 ```bash
 docker-compose exec maven /bin/bash
-```
+````
 
-### tomcatプロジェクト作成
+### Create tomcat project
 
 ```bash
 mvn archetype:generate -DgroupId=com.example -DartifactId=my-tomcat-app -Dversion=1.0-SNAPSHOT -DarchetypeArtifactId=maven-archetype-webapp
 
-* "my-tomcat-app"がプロジェクト名(warファイル名)となる。
-```
+* "my-tomcat-app" becomes the project name (war file name).
+````
 
-作成された"my-tomcat-app"内でサーブレットを作成する。
+Create a servlet in the created "my-tomcat-app".
 
-javaフォルダ内でjavaソースファイル/webapp内にJSPファイルを置く。
+Place the JSP file in the java source file/webapp in the java folder.
 
-プロジェクト作成後以下の設定を実施して、mavenビルドできるようにすること。
+After creating the project, perform the following settings to enable maven build.
 
 ```bash
-cd {プロジェクト名}
+cd {project name}
 vi pom.xml
 
-以下の内容を<dependencies>~</dependencies>内に追記する。
+Add the following content within <dependencies>~</dependencies>.
 
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>4.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>javax.servlet.jsp-api</artifactId>
-      <version>2.3.3</version>
-      <scope>provided</scope>
-    </dependency>
+     <dependency>
+       <groupId>javax.servlet</groupId>
+       <artifactId>javax.servlet-api</artifactId>
+       <version>4.0.1</version>
+       <scope>provided</scope>
+     </dependency>
+     <dependency>
+       <groupId>javax.servlet.jsp</groupId>
+       <artifactId>javax.servlet.jsp-api</artifactId>
+       <version>2.3.3</version>
+       <scope>provided</scope>
+     </dependency>
 
-以下の内容を<build>~</build>内に追記する。
+Add the following content to <build>~</build>.
 
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>11</source>
-          <target>11</target>
-        </configuration>
-      </plugin>
-    </plugins>
-```
+     <plugins>
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-compiler-plugin</artifactId>
+         <version>3.8.1</version>
+         <configuration>
+           <source>11</source>
+           <target>11</target>
+         </configuration>
+       </plugin>
+     </plugins>
+````
 
-### tomcatサーブレットサンプル
+### tomcat servlet sample
 
-以下のファイルを作成する。
+Create the following files.
 
 ```bash
 mkdir src/main/java
@@ -116,68 +110,68 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class HelloServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-        response.getWriter().println("<h1>Hello, World!</h1>");
-    }
+     @Override
+     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         response.setContentType("text/html");
+         response.getWriter().println("<h1>Hello, World!</h1>");
+     }
 }
-```
+````
 
 ```bash
 vi src/main/webapp/WEB-INF
 
-以下の内容を<web-app>~</web-app>内に追記する。
+Add the following content within <web-app>~</web-app>.
 
-  <servlet>
-    <servlet-name>HelloServlet</servlet-name>
-    <servlet-class>com.example.HelloServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>HelloServlet</servlet-name>
-    <url-pattern>/helloservlet</url-pattern>
-  </servlet-mapping>
-```
+   <servlet>
+     <servlet-name>HelloServlet</servlet-name>
+     <servlet-class>com.example.HelloServlet</servlet-class>
+   </servlet>
+   <servlet-mapping>
+     <servlet-name>HelloServlet</servlet-name>
+     <url-pattern>/helloservlet</url-pattern>
+   </servlet-mapping>
+````
 
-### mavenビルド
+### maven build
 
 ```bash
 mvn clean package
 
-* targetフォルダ内でwarファイルが作成されること。
-コンテナから抜ける。
-```
+* A war file is created in the target folder.
+Get out of the container.
+````
 
-### tomcatビルド
+### tomcat build
 
-tomcat-docker-public/webapps内にmavenビルドで作成したwarファイルを置く。
+Place the war file created by maven build in tomcat-docker-public/webapps.
 
-以下のURLでサーブレット参照できること。
+The servlet can be referenced with the following URL.
 
-http://localhost:8080/{プロジェクト名}/{サーブレット名}
+http://localhost:8080/{project name}/{servlet name}
 
 ## apache(httpd)
 
-### apacheからのtomcatサイト参照
+### Tomcat site reference from apache
 
-以下の操作を実施する。
+Perform the following operations.
 
 ```bash
 vi tomcat-docker-public/httpd.conf
 
-最後の行に以下の記載を実施。
+Add the following to the last line.
 ProxyPass /my-tomcat-app http://tomcat:8080/my-tomcat-app
 ProxyPassReverse /my-tomcat-app http://tomcat:8080/my-tomcat-app
 
-* "my-tomcat-app"(プロジェクト名)について、必要に応じて変更すること。
-```
+* Change "my-tomcat-app" (project name) as necessary.
+````
 
-コンテナ再起動を実施する。
+Execute container restart.
 ```bash
 docker-compose stop
 docker-compose up -d
-```
+````
 
-以下のURLでサーブレット参照できること。
+The servlet can be referenced with the following URL.
 
-http://localhost/{プロジェクト名}/{サーブレット名}
+http://localhost/{project name}/{servlet name}
