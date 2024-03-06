@@ -38,6 +38,7 @@ public class login extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        	response.sendRedirect("index.jsp");
         }
         
        
