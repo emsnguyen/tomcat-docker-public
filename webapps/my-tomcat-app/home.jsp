@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%
-    HttpSession currentSession = request.getAttribute("email");
-	console.log(currentSession);
-    if (currentSession == null || currentSession.getAttribute("username") == null) {
-        response.sendRedirect("home.jsp");
-    }
+    HttpSession currentSession = (HttpSession) request.getAttribute("email");
+    out.println("Current Session: " + currentSession); // In ra giá trị của currentSession
+    // if (currentSession == null || currentSession.getAttribute("username") == null) {
+    //     response.sendRedirect("home.jsp");
+    // }
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -108,25 +108,32 @@
 							<th>Gender</th>
 							<th>Email</th>
 							<th>Job</th>
+							<th>Action</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>
-								<span class="custom-checkbox">
-									<input type="checkbox" id="checkbox1" name="options[]" value="1">
-									<label for="checkbox1"></label>
-								</span>
-							</td>
-							<td>Thomas Hardy</td>
-							<td>thomashardy@mail.com</td>
-							<td>89 Chiaroscuro Rd, Portland, USA</td>
-							<td>(171) 555-2222</td>
-							<td>
-								<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-								<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-							</td>
-						</tr>
+					<c:forEach var="user" items="${listUser}">
+						<p>User ID: ${user.id}, Username: ${user.username}, Email: ${user.email}</p>
+					</c:forEach>
+						<%-- <c:forEach var="user" items="${listUser}">
+							<tr>
+								<td>
+									<span class="custom-checkbox">
+										<input type="checkbox" id="checkbox${user.id}" name="options[]" value="${user.id}">
+										<label for="checkbox${user.id}"></label>
+									</span>
+								</td>
+								<td>${user.name}</td>
+								<td>${user.age}</td>
+								<td>${user.gender ? 'Male' : 'Female'}</td>
+								<td>${user.email}</td>
+								<td>${user.job}</td>
+								<td>
+									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+									<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+								</td>
+							</tr>
+						</c:forEach> --%>
 					</tbody>
 				</table>
 				<div class="clearfix">

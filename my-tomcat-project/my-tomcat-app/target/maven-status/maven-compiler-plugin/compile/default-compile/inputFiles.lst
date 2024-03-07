@@ -1,5 +1,7 @@
-/app/my-tomcat-app/src/main/java/com/example/LogoutSerlet.java
-/app/my-tomcat-app/src/main/java/com/example/Register.java
-/app/my-tomcat-app/src/main/java/com/example/HomeServlet.java
-/app/my-tomcat-app/src/main/java/com/example/DBManager.java
-/app/my-tomcat-app/src/main/java/com/example/LoginServlet.java
+/app/my-tomcat-app/src/main/java/com/example/DAO/DBManager.java
+/app/my-tomcat-app/src/main/java/com/example/Controller/LoginServlet.java
+/app/my-tomcat-app/src/main/java/com/example/Model/User.java
+/app/my-tomcat-app/src/main/java/com/example/Controller/HomeServlet.java
+/app/my-tomcat-app/src/main/java/com/example/Controller/LogoutSerlet.java
+/app/my-tomcat-app/src/main/java/com/example/Controller/Register.java
+/app/my-tomcat-app/src/main/java/com/example/DAO/UserDAO.java

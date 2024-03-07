@@ -1,5 +1,7 @@
-com/example/HomeServlet.class
-com/example/LoginServlet.class
-com/example/LogoutSerlet.class
-com/example/Register.class
-com/example/DBManager.class
+com/example/DAO/DBManager.class
+com/example/Controller/Register.class
+com/example/DAO/UserDAO.class
+com/example/Controller/LoginServlet.class
+com/example/Controller/LogoutSerlet.class
+com/example/Model/User.class
+com/example/Controller/HomeServlet.class
