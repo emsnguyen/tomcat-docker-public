@@ -28,7 +28,7 @@
 					</div>
 
 					<div class="signin-form">
-						<h2 class="form-title">Sign up</h2>
+						<h2 class="form-title">Login</h2>
 						<form method="post" action="loginServlet" class="register-form"
 							id="login-form" onsubmit="return validateForm()">
 							<div class="form-group">
