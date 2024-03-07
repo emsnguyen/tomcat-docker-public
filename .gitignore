@@ -1,4 +1,4 @@
-# /webapps/
+/webapps/
 !/webapps/.gitkeep
 /infra/
 !/infra/docker/mysql/.gitignore

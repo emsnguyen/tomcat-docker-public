@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%
     HttpSession currentSession = (HttpSession) request.getAttribute("email");
@@ -112,10 +113,7 @@
 						</tr>
 					</thead>
 					<tbody>
-					<c:forEach var="user" items="${listUser}">
-						<p>User ID: ${user.id}, Username: ${user.username}, Email: ${user.email}</p>
-					</c:forEach>
-						<%-- <c:forEach var="user" items="${listUser}">
+						<c:forEach var="user" items="${listUser}">
 							<tr>
 								<td>
 									<span class="custom-checkbox">
@@ -127,13 +125,15 @@
 								<td>${user.age}</td>
 								<td>${user.gender ? 'Male' : 'Female'}</td>
 								<td>${user.email}</td>
-								<td>${user.job}</td>
+								<td>${user.job_id}</td>
+								<td></td>
 								<td>
+									<!-- Các liên kết chỉnh sửa và xóa -->
 									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
 									<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
 								</td>
 							</tr>
-						</c:forEach> --%>
+						</c:forEach>
 					</tbody>
 				</table>
 				<div class="clearfix">

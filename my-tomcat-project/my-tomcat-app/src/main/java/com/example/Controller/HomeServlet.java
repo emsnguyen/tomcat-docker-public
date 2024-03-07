@@ -54,8 +54,18 @@ public class HomeServlet extends HttpServlet {
             throws SQLException, IOException, ServletException {
         UserDAO userDao = new UserDAO(con);
         List<User> listUser = userDao.getAllUsers();
+        System.out.println("Danh sách người dùng:");
+        for (User user : listUser) {
+            System.out.println("Tên: " + user.getName());
+            System.out.println("Tuổi: " + user.getAge());
+            System.out.println("Giới tính: " + (user.getGender() ? "Nam" : "Nữ"));
+            System.out.println("Email: " + user.getEmail());
+            System.out.println("Nghề nghiệp: " + user.getJob_id());
+            System.out.println("-----");
+        }
         request.setAttribute("listUser", listUser);
         RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
         dispatcher.forward(request, response);
     }
+
 }
