@@ -28,7 +28,7 @@ public class register extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("/login");
     }
 }
 

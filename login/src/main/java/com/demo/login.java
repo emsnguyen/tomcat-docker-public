@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,15 +31,15 @@ public class login extends HttpServlet {
                     	 HttpSession session = request.getSession();
                          session.setAttribute("username", username);
                          
-                         response.sendRedirect("welcome.jsp");
+                         response.sendRedirect("/login/welcome");
                     } else {
-						response.sendRedirect("index.jsp");
+						response.sendRedirect("/login");
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        	response.sendRedirect("index.jsp");
+            response.sendRedirect("/login");
         }
         
        
