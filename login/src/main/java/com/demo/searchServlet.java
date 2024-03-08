@@ -31,7 +31,9 @@ public class searchServlet extends HttpServlet {
 	public static  List<User> getUserInfo() {
     	List<User> lstUser = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String sql = "SELECT * FROM user_info";
+            String sql = "SELECT user_info.id, user_info.name, user_info.age, user_info.gender, user_info.email, job.name AS job\r\n"
+            		+ "FROM user_info\r\n"
+            		+ "INNER JOIN job ON user_info.id_job = job.idjob;";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
