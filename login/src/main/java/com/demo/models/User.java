@@ -1,4 +1,5 @@
 package com.demo.models;
+import com.google.gson.Gson;
 public class User {
     private String name;
     private String email;
@@ -12,6 +13,11 @@ public class User {
         this.age = age;
         this.gender = gender;
         this.job = job;
+    }
+    
+    public String toJSON() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 
     // Getters and setters

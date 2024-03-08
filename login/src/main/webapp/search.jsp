@@ -62,7 +62,7 @@
 		            if (userList != null) {
 		                for (User user : userList) {
 		            %>
-		            <tr>
+		            <tr onclick="showPopup('<%= user.getName() %>', <%= user.getAge() %>, '<%= user.getGender() %>', '<%= user.getEmail() %>', '<%= user.getJob() %>')">
 		            	<td><input type="checkbox" name="selectedIds" value=<%= user.getEmail() %>></td>
 		                <td><%= user.getName() %></td>
 		                <td><%= user.getAge() %></td>
@@ -87,6 +87,11 @@ function logout() {
 }
 function add() {
     window.location.href = "index.jsp";
+}
+
+function showPopup(name, age,gender,email,job) {
+    //var user = JSON.parse(userJSON);
+    alert("name: " + name + "\nage: " + age + "\ngender: " + gender+ "\nemail: " + email + "\njob: " + job);
 }
 
 </script>

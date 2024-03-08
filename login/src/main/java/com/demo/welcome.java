@@ -17,15 +17,15 @@ import javax.servlet.http.*;
 public class welcome extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	HttpSession session = request.getSession();
-    	if (session.getAttribute("username") != null) {
-	    	List<String> occupations = getOccupations();
-		    request.setAttribute("occupations", occupations);
-		    RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
-		    dispatcher.forward(request, response);
-	    }
-    	else {
-    		response.sendRedirect("/login");
-    	}
+    	//if (session.getAttribute("username") != null) {
+    	List<String> occupations = getOccupations();
+	    request.setAttribute("occupations", occupations);
+	    RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
+	    dispatcher.forward(request, response);
+//	    }
+//    	else {
+//    		response.sendRedirect("/login");
+//    	}
     }
     
     public static List<String> getOccupations() {
@@ -88,7 +88,7 @@ public class welcome extends HttpServlet {
 			out.println("<html><head><title>Popup</title></head><body>");
 		    out.println("<script>");
 		    out.println("alert('"+noti+"');");
-		    out.println("window.location.href = 'welcome';");
+		    out.println("window.location.href = 'search';");
 		    out.println("</script>");
 		    out.println("</body></html>");
 		} catch (IOException e) {
