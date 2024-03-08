@@ -35,6 +35,27 @@ public class UserDAO {
         return users;
     }
 
+    public User getUserById(int userId) throws SQLException {
+        User user = null;
+        String query = "SELECT * FROM user WHERE id=?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setContact(rs.getString("contact"));
+                user.setGender(rs.getBoolean("gender"));
+                user.setJob_id(rs.getInt("job_id"));
+                user.setAge(rs.getInt("age"));
+            }
+        }
+        return user;
+    }
+
     public List<User> searchUsers(User searchCriteria) throws SQLException {
         List<User> users = new ArrayList<>();
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM user WHERE 1=1");

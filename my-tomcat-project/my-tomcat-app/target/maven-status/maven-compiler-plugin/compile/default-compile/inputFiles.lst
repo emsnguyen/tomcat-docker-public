@@ -4,4 +4,6 @@
 /app/my-tomcat-app/src/main/java/com/example/Controller/HomeServlet.java
 /app/my-tomcat-app/src/main/java/com/example/Controller/LogoutSerlet.java
 /app/my-tomcat-app/src/main/java/com/example/Controller/Register.java
+/app/my-tomcat-app/src/main/java/com/example/Model/Job.java
+/app/my-tomcat-app/src/main/java/com/example/DAO/JobDAO.java
 /app/my-tomcat-app/src/main/java/com/example/DAO/UserDAO.java

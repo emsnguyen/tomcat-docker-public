@@ -31,7 +31,7 @@
 							</div>
 							<div class="form-group">
 								<label for="email"><i class="zmdi zmdi-email"></i></label> <input
-									type="email" name="email" id="email" placeholder="Your Email" />
+									type="text" name="email" id="email" placeholder="Your Email" />
 								<span id="email-error" class="error-message"></span>
 							</div>
 							<div class="form-group">
