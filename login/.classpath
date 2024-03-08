@@ -13,7 +13,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="E:/Project/java/tomcat-docker-public-DangPHH-Login/mysql-connector-j-8.0.33.jar">
+	<classpathentry kind="lib" path="E:/Project/tomcat-docker-public/mysql-connector-j-8.0.33.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>

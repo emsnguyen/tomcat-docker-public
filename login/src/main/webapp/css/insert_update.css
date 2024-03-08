@@ -1,0 +1,171 @@
+
+form button[type="button"] {
+	width: 100%;
+          background-color: #4CAF50;
+          color: white;
+          padding: 10px 20px;
+          margin-top: 20px ;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+}
+
+.logout-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+#gender-options {
+    margin-bottom: 10px;
+}
+.radio-center {
+    text-align: center;
+}
+
+.add-button {
+    background-color: #4CAF50; /* Màu xanh */
+    color: white;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Màu cho nút edit */
+.edit-button {
+    background-color: #ffcc00; /* Màu vàng */
+    color: white;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Màu cho nút delete */
+.delete-button {
+    background-color: #ff0000; /* Màu đỏ */
+    color: white;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+        
+body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column; 
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f2f2f2;
+  }
+
+.form-container {
+     display: flex;
+     justify-content: center;
+     align-items: flex-start; /* Căn form lên trên */
+   	margin-bottom: 20px; /* Khoảng cách giữa form và bảng */
+}
+
+form {
+    width: 400px;
+    padding: 20px;
+    margin: 10px 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+form button[type="button"] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 20px ;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.logout-button {
+    margin-top: 20px; /* Khoảng cách giữa form và button logout */
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.data-form {
+ 	width: 1000px; /* Chiều rộng cố định của form */
+    height: 400px; /* Chiều cao cố định của form */
+    overflow: auto; /* Tạo thanh cuộn khi nội dung vượt quá kích thước */
+    border: 1px solid #ccc; /* Viền cho form */
+    padding: 10px; /* Khoảng cách nội dung và biên của form */
+    border-radius: 8px; /* Đường cong viền của form */
+}
+
+.data-form table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-form th, .data-form td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.data-form th {
+    background-color: #f2f2f2;
+}
+
+      
