@@ -9,6 +9,7 @@ public class User {
     private boolean gender;
     private int job_id;
     private int age;
+    private String job_name;
 
     // Getter và setter cho trường 'id'
     public int getId() {
@@ -80,5 +81,14 @@ public class User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    // Getter và setter cho trường 'job_name'
+    public String getJob_name() {
+        return job_name;
+    }
+
+    public void setJob_name(String job_name) {
+        this.job_name = job_name;
     }
 }

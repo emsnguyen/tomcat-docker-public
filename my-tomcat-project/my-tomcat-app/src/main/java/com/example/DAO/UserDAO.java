@@ -22,6 +22,7 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 User user = new User();
+                user.setId(rs.getInt("id"));
                 user.setName(rs.getString("name"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
@@ -117,6 +118,8 @@ public class UserDAO {
 
     public void updateUser(User user) throws SQLException {
         String query = "UPDATE user SET name = ?, email = ?, password = ?, contact = ?, gender = ?, job_id = ?, age = ? WHERE id = ?";
+        System.out.println(user.getAge());
+        System.out.println(user.getId());
         try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());

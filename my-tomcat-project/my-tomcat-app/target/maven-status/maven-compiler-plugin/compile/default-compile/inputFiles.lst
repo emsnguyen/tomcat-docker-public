@@ -3,7 +3,8 @@
 /app/my-tomcat-app/src/main/java/com/example/Model/User.java
 /app/my-tomcat-app/src/main/java/com/example/Controller/HomeServlet.java
 /app/my-tomcat-app/src/main/java/com/example/Controller/LogoutSerlet.java
-/app/my-tomcat-app/src/main/java/com/example/Controller/Register.java
+/app/my-tomcat-app/src/main/java/com/example/Controller/User/AddUserServlet.java
 /app/my-tomcat-app/src/main/java/com/example/Model/Job.java
+/app/my-tomcat-app/src/main/java/com/example/Controller/RegisterSerlet.java
 /app/my-tomcat-app/src/main/java/com/example/DAO/JobDAO.java
 /app/my-tomcat-app/src/main/java/com/example/DAO/UserDAO.java

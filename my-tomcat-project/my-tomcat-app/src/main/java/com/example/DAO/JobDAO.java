@@ -22,10 +22,24 @@ public class JobDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Job Job = new Job();
+                Job.setId(rs.getInt("id"));
                 Job.setName(rs.getString("name"));
                 Jobs.add(Job);
             }
         }
         return Jobs;
+    }
+
+    public String getJobNameById(int jobId) throws SQLException {
+        String jobName = null;
+        String query = "SELECT name FROM Job WHERE id = ?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, jobId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                jobName = rs.getString("name");
+            }
+        }
+        return jobName;
     }
 }

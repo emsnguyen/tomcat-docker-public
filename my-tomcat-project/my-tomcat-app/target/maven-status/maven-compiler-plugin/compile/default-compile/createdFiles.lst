@@ -1,5 +1,5 @@
+com/example/Controller/User/AddUserServlet.class
 com/example/DAO/DBManager.class
-com/example/Controller/Register.class
 com/example/DAO/UserDAO.class
 com/example/DAO/JobDAO.class
 com/example/Model/Job.class
@@ -7,3 +7,4 @@ com/example/Controller/LoginServlet.class
 com/example/Controller/LogoutSerlet.class
 com/example/Model/User.class
 com/example/Controller/HomeServlet.class
+com/example/Controller/RegisterSerlet.class
