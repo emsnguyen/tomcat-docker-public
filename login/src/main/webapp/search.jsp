@@ -48,7 +48,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Select</th>
+                        <th>Check box</th>
                         <th>Name</th>
                         <th>Age</th>
                         <th>Gender</th>
@@ -62,8 +62,8 @@
 		            if (userList != null) {
 		                for (User user : userList) {
 		            %>
-		            <tr onclick="showPopup('<%= user.getName() %>', <%= user.getAge() %>, '<%= user.getGender() %>', '<%= user.getEmail() %>', '<%= user.getJob() %>')">
-		            	<td><input type="checkbox" name="selectedIds" value=<%= user.getEmail() %>></td>
+		            <tr onclick="if(event.target.type !== 'checkbox') showPopup('<%= user.getName() %>', <%= user.getAge() %>, '<%= user.getGender() %>', '<%= user.getEmail() %>', '<%= user.getJob() %>')">
+		            	<td><input type="checkbox" name="selectedIds" value=<%= user.getId() %>></td>
 		                <td><%= user.getName() %></td>
 		                <td><%= user.getAge() %></td>
 		                <td><%= user.getGender() %></td>

@@ -1,23 +1,29 @@
 package com.demo.models;
-import com.google.gson.Gson;
 public class User {
+    private int id;
     private String name;
     private String email;
     private int age;
     private String gender;
     private String job;
 
-    public User(String name, String email, int age, String gender, String job) {
+    public User(int id, String name, String email, int age, String gender, String job) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.age = age;
         this.gender = gender;
         this.job = job;
     }
+
     
-    public String toJSON() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+    // Getter and setter for id
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     // Getters and setters

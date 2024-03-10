@@ -13,12 +13,14 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+
+import com.demo.models.Job;
 @WebServlet("/welcome")
 public class welcome extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	HttpSession session = request.getSession();
     	//if (session.getAttribute("username") != null) {
-    	List<String> occupations = getOccupations();
+    	List<Job> occupations = getOccupations();
 	    request.setAttribute("occupations", occupations);
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
 	    dispatcher.forward(request, response);
@@ -28,14 +30,16 @@ public class welcome extends HttpServlet {
 //    	}
     }
     
-    public static List<String> getOccupations() {
-        List<String> occupations = new ArrayList<>();
+    public static List<Job> getOccupations() {
+        List<Job> occupations = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection()) {
             String sql = "SELECT * FROM job";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        String occupation = resultSet.getString("name");
+                    	Job occupation = new Job(0,"");
+                    	occupation.setIdJob(resultSet.getInt("idjob"));
+                    	occupation.setName(resultSet.getString("name"));
                         occupations.add(occupation);
                     }
                 }
@@ -64,13 +68,14 @@ public class welcome extends HttpServlet {
         }
         else {
 	        try (Connection conn = DatabaseConnection.getConnection()) {
-	            String sql = "INSERT INTO user_info (name, age, gender, email, job) VALUES (?, ?, ?, ?, ?)";
+	            String sql = "INSERT INTO user_info (name, age, gender, email, id_job) VALUES (?, ?, ?, ?, ?)";
 	            try (PreparedStatement statement = conn.prepareStatement(sql)) {
 	                statement.setString(1, username);
 	                statement.setInt(2, age);
 	                statement.setString(3, gender);
 	                statement.setString(4, email);
-	                statement.setString(5, job);
+	                int jobId = Integer.parseInt(job);
+	                statement.setInt(5, jobId);
 	                statement.executeUpdate();
 	                popup(resp, "Insert Successfully");
 	            }

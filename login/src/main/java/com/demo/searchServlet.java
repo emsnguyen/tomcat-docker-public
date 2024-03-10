@@ -32,16 +32,16 @@ public class searchServlet extends HttpServlet {
     	List<User> lstUser = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection()) {
             String sql = "SELECT user_info.id, user_info.name, user_info.age, user_info.gender, user_info.email, job.name AS job\r\n"
-            		+ "FROM user_info\r\n"
-            		+ "INNER JOIN job ON user_info.id_job = job.idjob;";
+            		+ "            		FROM user_info\r\n"
+            		+ "            		INNER JOIN job ON user_info.id_job = job.idjob\r\n"
+            		+ "                 where user_info.is_deleted = 0";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                    	User user = new User("", "", 0, "", "");
+                    	User user = new User(0,"", "", 0, "", "");
+                    	user.setId(Integer.decode(resultSet.getString("id")));
                         user.setName(resultSet.getString("name"));
-                        Integer age = null;
-                    	age = Integer.decode(resultSet.getString("age"));
-                        user.setAge(age);
+                        user.setAge(Integer.decode(resultSet.getString("age")));
                         user.setGender(resultSet.getString("gender"));
                         user.setEmail(resultSet.getString("email"));
                         user.setJob(resultSet.getString("job"));
@@ -53,6 +53,18 @@ public class searchServlet extends HttpServlet {
             e.printStackTrace();
         }
         return lstUser;
+    }
+	
+	private void deleteUserInfo(int userId) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String sql = "UPDATE user_info SET is_deleted = ?  WHERE id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, 1);
+            statement.setInt(2, userId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 	@Override
@@ -68,7 +80,15 @@ public class searchServlet extends HttpServlet {
 		    } else if ("edit".equals(action)) {
 		    	 response.sendRedirect("search");
 		    } else if ("delete".equals(action)) {
-		    	 response.sendRedirect("search");
+		    	String[] selectedIds = request.getParameterValues("selectedIds");
+	    	    if (selectedIds != null && selectedIds.length > 0) {
+	    	        for (String id : selectedIds) {
+	    	            int userId = Integer.parseInt(id);
+	    	            deleteUserInfo(userId);
+	    	        }
+	    	    } else {
+	    	    }
+		    	response.sendRedirect("search");
 		    } else {
 		    	 response.sendRedirect("search");
 		    }

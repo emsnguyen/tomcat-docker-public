@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-
+<%@ page import = "com.demo.models.Job" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,11 +36,11 @@
 	<select id="job" name="job">
 	    <option value="">Select occupation</option>
 		<%
-		    List<String> occupations = (List<String>) request.getAttribute("occupations");
+		    List<Job> occupations = (List<Job>) request.getAttribute("occupations");
 		    if (occupations != null) {
-		        for (String occupation : occupations) {
+		        for (Job occupation : occupations) {
 		%>
-		<option value="<%= occupation %>"><%= occupation %></option>
+		<option value="<%= occupation.getIdJob() %>"><%= occupation.getName() %></option>
 		<%
 		        }
 		    }
