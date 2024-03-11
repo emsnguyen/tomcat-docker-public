@@ -19,7 +19,7 @@ import com.example.DAO.UserDAO;
 import com.example.Model.Job;
 import com.example.Model.User;
 
-@WebServlet(urlPatterns = { "/user", "/user/insert", "/user/edit", "/user/update" })
+@WebServlet(urlPatterns = { "/user", "/user/insert", "/user/edit", "/user/update", "/user/delete" })
 public class AddUserServlet extends HttpServlet {
     private Connection con;
     private UserDAO userDao;
@@ -66,6 +66,9 @@ public class AddUserServlet extends HttpServlet {
                     case "/user/insert":
                         createUser(request, response);
                         break;
+                    case "/user/delete":
+                        deleteUser(request, response);
+                        break;
                     case "/user":
                         showForm(request, response);
                         break;
@@ -103,7 +106,7 @@ public class AddUserServlet extends HttpServlet {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String contact = request.getParameter("contact");
-        boolean gender = Boolean.parseBoolean(request.getParameter("gender"));
+        boolean gender = "1".equals(request.getParameter("gender"));
         int job_id = Integer.parseInt(request.getParameter("job_id"));
         int age = Integer.parseInt(request.getParameter("age"));
 
@@ -115,6 +118,7 @@ public class AddUserServlet extends HttpServlet {
         newUser.setGender(gender);
         newUser.setJob_id(job_id);
         newUser.setAge(age);
+        newUser.setis_delete(false);
 
         userDao.createUser(newUser);
 
@@ -129,17 +133,9 @@ public class AddUserServlet extends HttpServlet {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String contact = request.getParameter("contact");
-        boolean gender = Boolean.parseBoolean(request.getParameter("gender"));
+        boolean gender = "1".equals(request.getParameter("gender"));
         int job_id = Integer.parseInt(request.getParameter("job_id"));
         int age = Integer.parseInt(request.getParameter("age"));
-        System.out.println(userId);
-        System.out.println(name);
-        System.out.println(email);
-        System.out.println(contact);
-        System.out.println(gender);
-        System.out.println(job_id);
-        System.out.println(age);
-
         User updateUser = new User();
 
         updateUser.setId(userId);
@@ -158,18 +154,10 @@ public class AddUserServlet extends HttpServlet {
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        int userId = Integer.parseInt(request.getParameter("userId"));
+        int userId = Integer.parseInt(request.getParameter("id"));
         userDao.deleteUser(userId);
 
         response.sendRedirect("/my-tomcat-app/home");
     }
 
-    private void viewUser(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
-        int userId = Integer.parseInt(request.getParameter("userId"));
-        User user = userDao.getUserById(userId);
-        request.setAttribute("user", user);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("detail.jsp");
-        dispatcher.forward(request, response);
-    }
 }

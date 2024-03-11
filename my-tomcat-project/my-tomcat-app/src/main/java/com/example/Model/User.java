@@ -10,6 +10,7 @@ public class User {
     private int job_id;
     private int age;
     private String job_name;
+    private boolean is_delete;
 
     // Getter và setter cho trường 'id'
     public int getId() {
@@ -90,5 +91,14 @@ public class User {
 
     public void setJob_name(String job_name) {
         this.job_name = job_name;
+    }
+
+    // Getter và setter cho trường 'is_delete'
+    public boolean getis_delete() {
+        return is_delete;
+    }
+
+    public void setis_delete(boolean is_delete) {
+        this.is_delete = is_delete;
     }
 }

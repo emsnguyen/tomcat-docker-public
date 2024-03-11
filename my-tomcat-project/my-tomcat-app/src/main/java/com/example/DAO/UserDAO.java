@@ -17,7 +17,7 @@ public class UserDAO {
 
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user";
+        String query = "SELECT * FROM user WHERE is_delete = false";
         try (PreparedStatement ps = con.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -103,7 +103,7 @@ public class UserDAO {
     }
 
     public void createUser(User user) throws SQLException {
-        String query = "INSERT INTO user (name, email, password, contact, gender, job_id, age) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO user (name, email, password, contact, gender, job_id, age, is_delete) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
@@ -112,14 +112,14 @@ public class UserDAO {
             ps.setBoolean(5, user.getGender());
             ps.setInt(6, user.getJob_id());
             ps.setInt(7, user.getAge());
+            ps.setBoolean(8, user.getis_delete());
+
             ps.executeUpdate();
         }
     }
 
     public void updateUser(User user) throws SQLException {
         String query = "UPDATE user SET name = ?, email = ?, password = ?, contact = ?, gender = ?, job_id = ?, age = ? WHERE id = ?";
-        System.out.println(user.getAge());
-        System.out.println(user.getId());
         try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
@@ -134,9 +134,10 @@ public class UserDAO {
     }
 
     public void deleteUser(int userId) throws SQLException {
-        String query = "DELETE FROM user WHERE id = ?";
+        String query = "UPDATE user SET is_delete = ? WHERE id = ?";
         try (PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setInt(1, userId);
+            ps.setBoolean(1, true);
+            ps.setInt(2, userId); // UserID for update
             ps.executeUpdate();
         }
     }

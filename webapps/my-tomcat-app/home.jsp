@@ -3,6 +3,14 @@
 	<!-- Header-->
 
 <%@ include file="../component/header.jsp" %>
+ 	<div class="row mt-5">
+        <div class="col-md-5 mx-auto">
+            <div class="input-group">
+                <input class="form-control border rounded-pill" type="search" value="search" id="example-search-input">
+            </div>
+        </div>
+    </div>
+    
 		<!-- Content-->
 		<div class="container-xl">
 			<div class="table-responsive">
@@ -49,9 +57,10 @@
 									<td>${user.gender ? 'Male' : 'Female'}</td>
 									<td>${user.email}</td>
 									<td>${user.job_name}</td>
-									<td>
+									<td class="action">
+										<a href="#" data-id="${user.id}" data-toggle="modal" data-target="#viewDetailModal"><i class="fa-solid fa-info"></i></a>
 										<a href="/my-tomcat-app/user/edit?id=<c:out value='${user.id}' />" class="edit" ><i class="fa-solid fa-pencil"></i></a>
-										<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="fa-solid fa-trash"></i></a>
+										<a href="#deleteEmployeeModal" data-id="${user.id}" class="delete" data-toggle="modal"><i class="fa-solid fa-trash"></i></a>
 									</td>
 								</tr>
 							 </c:forEach>
@@ -72,27 +81,78 @@
 				</div>
 			</div>        
 		</div>
-		<!-- Delete Modal HTML -->
-		<div id="deleteEmployeeModal" class="modal fade">
+		<!-- View Detail Modal HTML -->
+		<div id="viewDetailModal" class="modal fade">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					<form>
-						<div class="modal-header">						
-							<h4 class="modal-title">Delete Employee</h4>
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						</div>
-						<div class="modal-body">					
-							<p>Are you sure you want to delete these Records?</p>
-							<p class="text-warning"><small>This action cannot be undone.</small></p>
-						</div>
-						<div class="modal-footer">
-							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-							<input type="submit" class="btn btn-danger" value="Delete">
-						</div>
-					</form>
+					<div class="modal-header">						
+						<h4 class="modal-title">User Detail</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					</div>
+					<div class="modal-body">
+						<!-- Thêm các trường dữ liệu để hiển thị chi tiết của người dùng -->
+						<p>Name: <span id="detailName"></span></p>
+						<p>Age: <span id="detailAge"></span></p>
+						<p>Gender: <span id="detailGender"></span></p>
+						<p>Email: <span id="detailEmail"></span></p>
+						<p>Job: <span id="detailJob"></span></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
 				</div>
 			</div>
 		</div>
 
+			<!-- Delete Modal HTML -->
+			<div id="deleteEmployeeModal" class="modal fade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+							<div class="modal-header">						
+								<h4 class="modal-title">Delete Employee</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							</div>
+							<div class="modal-body">					
+								<p>Are you sure you want to delete these Records?</p>
+								<p class="text-warning"><small>This action cannot be undone.</small></p>
+							</div>
+							<div class="modal-footer">
+								<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+								<a href="#" id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
+							</div>
+					</div>
+				</div>
+			</div>
+
+		<script>
+			$(document).ready(function(){
+				$('#deleteEmployeeModal').on('show.bs.modal', function (e) {
+					var userId = $(e.relatedTarget).data('id');
+					console.log(userId);
+					var deleteUrl = "/my-tomcat-app/user/delete?id=" + userId;
+            		$('#confirmDeleteBtn').attr('href', deleteUrl);
+				});
+			});
+
+			$(document).ready(function(){
+				$('#viewDetailModal').on('show.bs.modal', function (e) {
+					var userId = $(e.relatedTarget).data('id');
+					$.ajax({
+						url: '/my-tomcat-app/home/detail?id=' + userId,
+						method: 'GET',
+						success: function(response) {
+							console.log(response);
+							$('#detailName').text(response.name);
+							$('#detailAge').text(response.age);
+							$('#detailGender').text(response.gender ? 'Male' : 'Female');
+							$('#detailEmail').text(response.email);
+							$('#detailJob').text(response.job_name);
+						},
+						error: function() {
+						}
+					});
+				});
+			});
+		</script>
 	<!-- Footer-->
 <%@ include file="../component/footer.jsp" %>

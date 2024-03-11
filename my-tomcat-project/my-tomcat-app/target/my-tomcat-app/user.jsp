@@ -1,12 +1,11 @@
 
-		<%@ include file="./component/header.jsp" %>
+<%@ include file="../component/header.jsp" %>
   
-    <!-- Add Modal HTML -->
 				<c:if test="${userExist != null}">
-					<form action="user/update" method="post">
+					<form action="/my-tomcat-app/user/update" method="post" onsubmit="return validateForm()">
 				</c:if>
 				<c:if test="${userExist == null}">
-					<form action="user/insert" method="post">
+					<form action="/my-tomcat-app/user/insert" method="post" onsubmit="return validateForm()">
 				</c:if>
 						<div class="modal-header">		
 							<c:if test="${userExist != null}">
@@ -15,9 +14,11 @@
 							<c:if test="${userExist == null}">
 								<h4 class="modal-title">Add Employee</h4>
 							</c:if>				
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						</div>
-						<div class="modal-body">					
+						<div class="modal-body">	
+							<c:if test="${userExist != null}">
+								<input type="hidden" name="id" value="<c:out value='${userExist.id}' />" />
+							</c:if>  				
 							<div class="form-group">
 								<label>Name</label>
 								<input type="text"  name="name" value="<c:out value='${userExist.name}' />" class="form-control" required>
@@ -31,20 +32,18 @@
 								<label>Gender</label><br>
 								<c:choose>
 									<c:when test="${userExist == null}">
-										<!-- Nếu người dùng không tồn tại, hiển thị các lựa chọn giới tính -->
-										<label><input type="radio" name="gender" value="0"> Male</label>
-										<label><input type="radio" name="gender" value="1"> Female</label>
+										<label><input type="radio" name="gender" value="1"> Male</label>
+										<label><input type="radio" name="gender" value="0"> Female</label>
 									</c:when>
 									<c:otherwise>
-										<!-- Nếu người dùng tồn tại, hiển thị giới tính dựa trên dữ liệu có sẵn -->
 										<c:choose>
-											<c:when test="${userExist.gender == false}">
-												<label><input type="radio" name="gender" value="0" checked> Male</label>
-												<label><input type="radio" name="gender" value="1"> Female</label>
+											<c:when test="${userExist.gender == true}">
+												<label><input type="radio" name="gender" value="1" checked> Male</label>
+												<label><input type="radio" name="gender" value="0"> Female</label>
 											</c:when>
 											<c:otherwise>
-												<label><input type="radio" name="gender" value="0"> Male</label>
-												<label><input type="radio" name="gender" value="1" checked> Female</label>
+												<label><input type="radio" name="gender" value="1"> Male</label>
+												<label><input type="radio" name="gender" value="0" checked> Female</label>
 											</c:otherwise>
 										</c:choose>
 									</c:otherwise>
@@ -52,13 +51,13 @@
 							</div>
 							<div class="form-group">
 								<label>Email</label>
-								<input type="email"  name="email" value="<c:out value='${userExist.email}' />" class="form-control" required>
+								<input  name="email"  id="email" value="<c:out value='${userExist.email}' />" class="form-control" required>
+								<span id="email-error" class="error-message"></span>
 							</div>
 							 <div class="form-group">
 								<label>Job</label>
 								 <c:choose>
 									<c:when test="${userExist == null}">
-										<!-- Nếu người dùng không tồn tại, hiển thị dropdown chọn công việc -->
 										<select class="form-control" name="job_id" >
 											<c:forEach var="job" items="${listJob}">
 												<option value="${job.id}">${job.name}</option>
@@ -66,7 +65,6 @@
 										</select>
 									</c:when>
 									<c:otherwise>
-										<!-- Nếu người dùng tồn tại, hiển thị dropdown chọn công việc với giá trị đã chọn trước đó -->
 										<select class="form-control" name="job_id" >
 											<c:forEach var="job" items="${listJob}">
 												<c:if test="${job.id == userExist.job_id}">
@@ -82,7 +80,7 @@
 							</div>					
 						</div>
 						<div class="modal-footer">
-							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+							<a href="/my-tomcat-app/home" class="btn btn-default">Cancel</a>
 							<c:if test="${userExist != null}">
 								<input type="submit" class="btn btn-success" value="Save">
 							</c:if>
@@ -91,5 +89,17 @@
 							</c:if>
 						</div>
 					</form>
-
-<%@ include file="./component/footer.jsp" %> 
+<script>
+		function validateForm() {
+			var email = document.getElementById('email').value;
+			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(email)) {
+				document.getElementById('email-error').innerHTML = "Invalid email address";
+				return false;
+			} else {
+				document.getElementById('email-error').innerHTML = "";
+				return true;
+			}
+		}
+	</script>
+<%@ include file="../component/footer.jsp" %>

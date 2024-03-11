@@ -36,6 +36,11 @@
       <artifactId>jstl</artifactId>
       <version>1.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20210307</version> <!-- hoặc phiên bản mới nhất hiện có -->
+    </dependency>
   </dependencies>
   <build>
     <finalName>my-tomcat-app</finalName>
