@@ -1,5 +1,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.demo.models.User" %>
+<%@ page import = "com.demo.models.Job" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,8 +32,20 @@
             <label for="email">Email:</label>
             <input type="email" id="email" name="email"><br>
             
-            <label for="job">Job:</label>
-            <input type="text" id="job" name="job"><br>
+            
+            <label for="job">Occupation:</label><br>
+            <select id="job" name="job">
+		    <option value="">Select occupation</option>
+			<%
+			    List<Job> occupations = (List<Job>) request.getAttribute("occupations");
+			    if (occupations != null) {
+			        for (Job occupation : occupations) {
+			%>
+			<option value="<%= occupation.getIdJob() %>"><%= occupation.getName() %></option>
+			<%
+			        }
+			    }
+			%>
             
             <input type="submit" value="Search">
         </form>
@@ -57,23 +70,46 @@
                     </tr>
                 </thead>
                 <tbody>
-		            <% 
-		            List<User> userList = (List<User>) request.getAttribute("userList");
-		            if (userList != null) {
-		                for (User user : userList) {
-		            %>
-		            <tr onclick="if(event.target.type !== 'checkbox') showPopup('<%= user.getName() %>', <%= user.getAge() %>, '<%= user.getGender() %>', '<%= user.getEmail() %>', '<%= user.getJob() %>')">
-		            	<td><input type="checkbox" name="selectedIds" value=<%= user.getId() %>></td>
-		                <td><%= user.getName() %></td>
-		                <td><%= user.getAge() %></td>
-		                <td><%= user.getGender() %></td>
-		                <td><%= user.getEmail() %></td>
-		                <td><%= user.getJob() %></td>
-		            </tr>
-		            <% 
-		                }
-		            }
-		            %>
+				<%
+				    List<User> searchResults = (List<User>) request.getAttribute("searchResults");
+				    if (searchResults != null && !searchResults.isEmpty()) {
+				        for (User user : searchResults) {
+				%>
+				            <tr onclick="if(event.target.type !== 'checkbox') showPopup('<%= user.getName() %>', <%= user.getAge() %>, '<%= user.getGender() %>', '<%= user.getEmail() %>', '<%= user.getJob() %>')">
+				                <td><input type="checkbox" name="selectedIds" value="<%= user.getId() %>"></td>
+				                <td><%= user.getName() %></td>
+				                <td><%= user.getAge() %></td>
+				                <td><%= user.getGender() %></td>
+				                <td><%= user.getEmail() %></td>
+				                <td><%= user.getJob() %></td>
+				            </tr>
+				<%
+				        }
+				    } else {
+				        List<User> userList = (List<User>) request.getAttribute("userList");
+				        if (userList != null && !userList.isEmpty()) {
+				            for (User user : userList) {
+				%>
+				                <tr onclick="if(event.target.type !== 'checkbox') showPopup('<%= user.getName() %>', <%= user.getAge() %>, '<%= user.getGender() %>', '<%= user.getEmail() %>', '<%= user.getJob() %>')">
+				                    <td><input type="checkbox" name="selectedIds" value="<%= user.getId() %>"></td>
+				                    <td><%= user.getName() %></td>
+				                    <td><%= user.getAge() %></td>
+				                    <td><%= user.getGender() %></td>
+				                    <td><%= user.getEmail() %></td>
+				                    <td><%= user.getJob() %></td>
+				                </tr>
+				<%
+				            }
+				        } else {
+				%>
+				            <tr>
+				                <td colspan="6">No data available</td>
+				            </tr>
+				<%
+				        }
+				    }
+				%>
+
 		        </tbody>
             </table>
             

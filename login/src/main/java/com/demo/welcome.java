@@ -18,12 +18,12 @@ import com.demo.models.Job;
 @WebServlet("/welcome")
 public class welcome extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	HttpSession session = request.getSession();
-    	//if (session.getAttribute("username") != null) {
-    	List<Job> occupations = getOccupations();
-	    request.setAttribute("occupations", occupations);
-	    RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
-	    dispatcher.forward(request, response);
+//    	HttpSession session = request.getSession(false);
+//    	if (session != null && session.getAttribute("username") != null) {
+	    	List<Job> occupations = getOccupations();
+		    request.setAttribute("occupations", occupations);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
+		    dispatcher.forward(request, response);
 //	    }
 //    	else {
 //    		response.sendRedirect("/login");
