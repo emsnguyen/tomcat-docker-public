@@ -12,21 +12,18 @@
 <!-- Favicon-->
 <link rel="icon" type="image/x-icon" href="./resources/assets/favicon.ico" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- Đường dẫn tới Font Awesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-xMHDyt2KmjN48bI7qzwe3AznZMw03KCH1Kt7eMP4OL9y2H9z2+P58jOVUa4+8wM9Ex0W2I3DzMc20SjQdEM/9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
-	crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/251df2663c.js" crossorigin="anonymous"></script>
 <!-- Google fonts-->
-<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
-	rel="stylesheet" type="text/css" />
-<link
-	href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic"
-	rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 <!-- Core theme CSS (includes Bootstrap)-->
-<link href="./resources/css/index-styles.css" rel="stylesheet" />
-
+<link href="resources/css/index-styles.css" rel="stylesheet" />
 
 </head>
 	<body id="page-top">
@@ -37,24 +34,3 @@
 			}
 		%>
 		<%@ include file="../component/navigation.jsp" %>
-		<!-- Masthead-->
-		<header class="masthead bg-primary text-white text-center">
-			<div class="container d-flex align-items-center flex-column">
-				<!-- Masthead Avatar Image-->
-				<img class="masthead-avatar mb-5" src="./resources/assets/img/avataaars.svg"
-					alt="..." />
-				<!-- Masthead Heading-->
-				<h1 class="masthead-heading text-uppercase mb-0">Welcome To Unique Developer</h1>
-				<!-- Icon Divider-->
-				<div class="divider-custom divider-light">
-					<div class="divider-custom-line"></div>
-					<div class="divider-custom-icon">
-						<i class="fas fa-star"></i>
-					</div>
-					<div class="divider-custom-line"></div>
-				</div>
-				<!-- Masthead Subheading-->
-				<p class="masthead-subheading font-weight-light mb-0">Java
-					Development - Web Development - Python</p>
-			</div>
-		</header>

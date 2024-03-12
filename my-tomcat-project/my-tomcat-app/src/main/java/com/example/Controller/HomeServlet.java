@@ -2,9 +2,8 @@ package com.example.Controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.sql.Connection;
-
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,7 +20,7 @@ import com.example.DAO.UserDAO;
 import com.example.Model.Job;
 import com.example.Model.User;
 
-@WebServlet(urlPatterns = { "/home", "/home/detail" })
+@WebServlet(urlPatterns = { "/home", "/home/detail", "/home/search" })
 
 public class HomeServlet extends HttpServlet {
 
@@ -41,6 +40,12 @@ public class HomeServlet extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
@@ -53,6 +58,9 @@ public class HomeServlet extends HttpServlet {
                 switch (action) {
                     case "/home/detail":
                         viewUser(request, response);
+                        break;
+                    case "/home/search":
+                        performSearch(request, response);
                         break;
                     default:
                         listUser(request, response);
@@ -79,7 +87,7 @@ public class HomeServlet extends HttpServlet {
         request.setAttribute("listUser", listUser);
         request.setAttribute("listJob", listJob);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/home.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -103,6 +111,41 @@ public class HomeServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(userJSON.toString());
+    }
+
+    private void performSearch(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        // Lấy các thông tin tìm kiếm từ request
+        String name = request.getParameter("name");
+        // String email = request.getParameter("email");
+        // int job = Integer.parseInt(request.getParameter("job"));
+        // boolean gender = Boolean.parseBoolean(request.getParameter("gender"));
+        // int minAge = Integer.parseInt(request.getParameter("minAge"));
+        // int maxAge = Integer.parseInt(request.getParameter("maxAge"));
+
+        // Tạo đối tượng User chứa thông tin tìm kiếm
+        User searchCriteria = new User();
+        searchCriteria.setName(name);
+        // searchCriteria.setEmail(email);
+        // searchCriteria.setJob_id(job);
+        // searchCriteria.setGender(gender);
+
+        // Gọi phương thức searchUsers từ DAO
+        // List<User> searchResult = userDao.searchUsers(searchCriteria, minAge,
+        // maxAge);
+        List<User> searchResult = userDao.searchUsers(searchCriteria);
+
+        // Đặt kết quả tìm kiếm vào request để hiển thị trên trang
+        for (User user : searchResult) {
+            System.out.println("User ID: " + user.getId());
+            System.out.println("Name: " + user.getName());
+            System.out.println("Email: " + user.getEmail());
+            // Thêm các thuộc tính khác của User tại đây
+        }
+        request.setAttribute("searchResult", searchResult);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/search.jsp");
+        dispatcher.forward(request, response);
     }
 
 }
