@@ -2,12 +2,12 @@ package com.demo.models;
 public class User {
     private int id;
     private String name;
-    private String email;
     private int age;
     private String gender;
+    private String email;
     private String job;
 
-    public User(int id, String name, String email, int age, String gender, String job) {
+    public User(int id, String name, int age, String gender, String email, String job) {
         this.id = id;
         this.name = name;
         this.email = email;

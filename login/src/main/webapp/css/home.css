@@ -1,0 +1,143 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f2f2f2;
+}
+
+.container {
+    width: 800px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+h1 {
+	text-align: left;
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    margin-left: 10px;
+}
+
+input, select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    margin: 5px;
+    margin-right:10px;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #ccc;
+}
+
+.custom-button {
+    background-color: #7297FF;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.results {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+.results h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.results table {
+	width: 100%;
+    border: 1px solid #000;
+}
+
+.results table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.results .pagination {
+    margin-top: 10px;
+    text-align: right;
+}
+
+.results .pagination a {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+}
+
+.results .pagination a:hover {
+    background-color: #ccc;
+}
+
+p {
+	text-align: right;
+}
+
+input#age,
+input#ageTo {
+    width: 50px;
+}
+button#add{
+	float: left;
+}
+button#search,
+#add_user,
+#edit,
+#delete,
+#cancel{
+	padding: 10px 20px;
+}
+button#delete{
+	background-color: #FF7272;
+}
+button#logout{
+	margin-bottom:10px;
+	float:right;
+}
+button#insert_user{
+	margin-top: 10px;
+	padding: 10px 20px;
+}
+
+.form-grid {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-column {
+    width: calc(50% - 10px);
+}
+
+.form-column label,
+.form-column input,
+.form-column select {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.gender-radio {
+    display: flex;
+    align-items: center;
+}
+
+.gender-radio label {
+    margin-right: 10px;
+}
+;

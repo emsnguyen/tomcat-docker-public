@@ -41,7 +41,7 @@ public class searchServlet extends HttpServlet {
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                    	User user = new User(0,"", "", 0, "", "");
+                    	User user = new User(0,"", 0, "", "", "");
                     	user.setId(Integer.decode(resultSet.getString("id")));
                         user.setName(resultSet.getString("name"));
                         user.setAge(Integer.decode(resultSet.getString("age")));
@@ -119,7 +119,7 @@ public class searchServlet extends HttpServlet {
             rs = stmt.executeQuery();
             
             while (rs.next()) {
-            	User user = new User(0,"", "", 0, "", "");
+            	User user = new User(0,"", 0, "", "", "");
                 user.setId(rs.getInt("id"));
                 user.setName(rs.getString("name"));
                 user.setAge(rs.getInt("age"));
@@ -190,8 +190,11 @@ public class searchServlet extends HttpServlet {
 	        }
 	        
 	        List<User> searchResults = searchUserList(name, age, gender, email, jobId);
-	        
+	        User userSearch = new User(0, name, age, gender, email, jobParameter);
+	        request.setAttribute("userSearch", userSearch);
 	        request.setAttribute("searchResults", searchResults);
+			List<Job> occupations = getOccupations();
+			request.setAttribute("occupations", occupations);
 	        request.getRequestDispatcher("search.jsp").forward(request, response);
 	    } else if ("formTable".equals(formType)) {
 	    	String action = request.getParameter("action");

@@ -16,36 +16,52 @@
         <form action="search" method="post">
         	<input type="hidden" name="formType" value="formSearch">
             <h2>Search</h2>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name"><br>
-            
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age"><br>
-            
-            <label for="gender">Gender:</label>
-            <select id="gender" name="gender">
-                <option value="">Select gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select><br>
-            
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email"><br>
-            
-            
-            <label for="job">Occupation:</label><br>
-            <select id="job" name="job">
-		    <option value="">Select occupation</option>
 			<%
-			    List<Job> occupations = (List<Job>) request.getAttribute("occupations");
-			    if (occupations != null) {
-			        for (Job occupation : occupations) {
+			    User userSearch = (User) request.getAttribute("userSearch");
+			    String nameValue = (userSearch != null && userSearch.getName() != null) ? userSearch.getName() : "";
+			    int ageValue = (userSearch != null && userSearch.getAge() > 0) ? userSearch.getAge() : 0; 
+			    String genderValue = (userSearch != null && userSearch.getGender() != null) ? userSearch.getGender() : "";
+			    String emailValue = (userSearch != null && userSearch.getEmail() != null) ? userSearch.getEmail() : "";
+			    String jobValue = (userSearch != null && userSearch.getJob() != null) ? userSearch.getJob() : "";
 			%>
-			<option value="<%= occupation.getIdJob() %>"><%= occupation.getName() %></option>
-			<%
+			
+			<label for="name">Name:</label>
+			<input type="text" id="name" name="name" value="<%= nameValue %>"><br>
+			
+			<label for="age">Age:</label>
+			<input type="number" id="age" name="age" value="<%= ageValue == 0 ? "" : ageValue %>"><br>
+			
+			<label for="gender">Gender:</label>
+			<select id="gender" name="gender">
+			    <option value="">Select gender</option>
+			    <option value="Male" <%= (genderValue.equals("Male")) ? "selected" : "" %>>Male</option>
+			    <option value="Female" <%= (genderValue.equals("Female")) ? "selected" : "" %>>Female</option>
+			</select><br>
+			
+			<label for="email">Email:</label>
+			<input type="email" id="email" name="email" value="<%= emailValue %>"><br>
+			
+			<label for="job">Occupation:</label><br>
+			<select id="job" name="job">
+			    <option value="">Select occupation</option>
+			    <%
+			        List<Job> occupations = (List<Job>) request.getAttribute("occupations");
+			        if (occupations != null) {
+			            for (Job occupation : occupations) {
+			            	 String selected = ""; 
+			                 if (jobValue.equals(String.valueOf(occupation.getIdJob()))) {
+			                     selected = "selected";
+			                 }
+			    %>
+			    <option value="<%= occupation.getIdJob() %>"  <%= selected %>> <%= occupation.getName() %></option>
+			    <%
+			            }
 			        }
-			    }
-			%>
+			    %>
+			</select><br>
+
+
+
             
             <input type="submit" value="Search">
         </form>
