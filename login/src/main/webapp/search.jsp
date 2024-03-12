@@ -39,7 +39,7 @@
 			</select><br>
 			
 			<label for="email">Email:</label>
-			<input type="email" id="email" name="email" value="<%= emailValue %>"><br>
+			<input type="text" id="email" name="email" value="<%= emailValue %>"><br>
 			
 			<label for="job">Occupation:</label><br>
 			<select id="job" name="job">
