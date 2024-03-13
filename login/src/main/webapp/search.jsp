@@ -1,6 +1,6 @@
-<%@ page import="java.util.List" %>
 <%@ page import="com.demo.models.User" %>
 <%@ page import = "com.demo.models.Job" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>

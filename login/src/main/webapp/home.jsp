@@ -42,7 +42,7 @@
         <form action="home" method="post" class="form-grid">
             <div class="form-column">
                 <label for="name">Name:</label>
-                <input type="text" id="name" name="name" placeholder="Enter name">
+                <input type="text" id="name" name="name" value="<%= nameValue %>" placeholder="Enter name">
                 <label for="job">Job:</label>
                 <select id="job" name="job">
                     <option value="">Select occupation</option>
@@ -63,14 +63,14 @@
                 </select>
                 <div class = "fullWidth">
                 	<label for="email">Email:</label>
-	                <input type="email" id="email" name="email" placeholder="Enter email">
+	                <input type="text" id="email" name="email" value="<%= emailValue %>" placeholder="Enter email">
 	            </div>
             </div>
             <div class="form-column">
                 <label for="age">Age:</label>
-                <input type="number" id="ageForm" name="ageForm">
+                <input type="number" id="ageForm" name="ageForm"  value="<%= ageForm%>">
                 <label >~</label>
-                <input type="number" id="ageTo" name="ageTo">
+                <input type="number" id="ageTo" name="ageTo" value="<%=ageTo%>">
                 <br>
                 <div class="gender-radio">
                 	<label for="gender">Gender:</label>

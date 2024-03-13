@@ -17,7 +17,7 @@ import javax.servlet.http.*;
 import com.demo.models.Job;
 import com.demo.models.User;
 @WebServlet("/user")
-public class welcome extends HttpServlet {
+public class user extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //    	HttpSession session = request.getSession(false);
 //    	if (session != null && session.getAttribute("username") != null) {
@@ -150,14 +150,14 @@ public class welcome extends HttpServlet {
 	        }
 	        else {
 				try (Connection conn = DatabaseConnection.getConnection()) {
-		            String sql = "UPDATE user_info\r\n"
+		            String sql = "UPDATE `user_info`\r\n"
 		            		+ "SET \r\n"
 		            		+ "    name = ?,\r\n"
 		            		+ "    age = ?,\r\n"
 		            		+ "    gender = ?,\r\n"
 		            		+ "    email = ?,\r\n"
-		            		+ "    id_job = ?,\r\n"
-		            		+ "WHERE id = " + id;
+		            		+ "    id_job = ?\r\n"
+		            		+ "WHERE id = ?";
 		            try (PreparedStatement statement = conn.prepareStatement(sql)) {
 		                statement.setString(1, username);
 		                statement.setInt(2, age);
@@ -165,6 +165,7 @@ public class welcome extends HttpServlet {
 		                statement.setString(4, email);
 		                int jobId = Integer.parseInt(job);
 		                statement.setInt(5, jobId);
+		                statement.setInt(6, Integer.parseInt(id));
 		                statement.executeUpdate();
 		                popup(resp, "Update Successfully");
 		            }

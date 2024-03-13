@@ -19,7 +19,7 @@ import com.demo.models.Job;
 import com.demo.models.User;
 
 @WebServlet("/home")
-public class searchServlet extends HttpServlet {
+public class home extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,12 +34,21 @@ public class searchServlet extends HttpServlet {
 	public static  List<User> getUserInfo() {
     	List<User> lstUser = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection()) {
+            String sCount = "SELECT COUNT(*) AS total_rows FROM user_info";
+            PreparedStatement stmt = conn.prepareStatement(sCount.toString());
+            ResultSet rs = stmt.executeQuery(sCount);
+            int rowCount = 0;
+            if (rs.next()) {
+                rowCount = rs.getInt("total_rows");
+            }
+            if (rowCount>5)
+            	rowCount = 5;
             String sql = "SELECT user_info.id, user_info.name, user_info.age, user_info.gender, user_info.email, job.name AS job\r\n"
             		+ "FROM user_info\r\n"
             		+ "INNER JOIN job ON user_info.id_job = job.idjob\r\n"
             		+ "WHERE user_info.is_deleted = 0\r\n"
             		+ "ORDER BY user_info.update_date DESC\r\n"
-            		+ "LIMIT 0, 5";
+            		+ "LIMIT 0," + rowCount;
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
@@ -80,7 +89,15 @@ public class searchServlet extends HttpServlet {
         
         try {
         	conn = DatabaseConnection.getConnection();
-            
+            String sCount = "SELECT COUNT(*) AS total_rows FROM user_info";
+            stmt = conn.prepareStatement(sCount.toString());
+            rs = stmt.executeQuery(sCount);
+            int rowCount = 0;
+            if (rs.next()) {
+                rowCount = rs.getInt("total_rows");
+            }
+            if (rowCount>5)
+            	rowCount = 5;
             StringBuilder sql = new StringBuilder("SELECT user_info.id, user_info.name, user_info.age, user_info.gender, user_info.email, job.name AS job\r\n"
             		+ "FROM user_info\r\n"
             		+ "INNER JOIN job ON user_info.id_job = job.idjob\r\n"
@@ -101,7 +118,7 @@ public class searchServlet extends HttpServlet {
                 sql.append(" AND user_info.id_job = ?");
             }
             sql.append("ORDER BY user_info.update_date DESC \r\n"
-            		+ "LIMIT 0, 5");
+            		+ "LIMIT 0," + rowCount);
             stmt = conn.prepareStatement(sql.toString());
             int parameterIndex = 1;
             if (!name.isEmpty()) {
