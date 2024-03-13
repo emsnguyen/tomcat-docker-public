@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.demo.models.Job;
 import com.demo.models.User;
 
-@WebServlet("/search")
+@WebServlet("/home")
 public class searchServlet extends HttpServlet {
 	
 	@Override
@@ -27,7 +27,7 @@ public class searchServlet extends HttpServlet {
 		req.setAttribute("userList", lstUser);
 		List<Job> occupations = getOccupations();
 		req.setAttribute("occupations", occupations);
-	    RequestDispatcher dispatcher = req.getRequestDispatcher("search.jsp");
+	    RequestDispatcher dispatcher = req.getRequestDispatcher("home.jsp");
 	    dispatcher.forward(req, resp);
 	}
 
@@ -35,9 +35,11 @@ public class searchServlet extends HttpServlet {
     	List<User> lstUser = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection()) {
             String sql = "SELECT user_info.id, user_info.name, user_info.age, user_info.gender, user_info.email, job.name AS job\r\n"
-            		+ "            		FROM user_info\r\n"
-            		+ "            		INNER JOIN job ON user_info.id_job = job.idjob\r\n"
-            		+ "                 where user_info.is_deleted = 0";
+            		+ "FROM user_info\r\n"
+            		+ "INNER JOIN job ON user_info.id_job = job.idjob\r\n"
+            		+ "WHERE user_info.is_deleted = 0\r\n"
+            		+ "ORDER BY user_info.update_date DESC\r\n"
+            		+ "LIMIT 0, 5";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
@@ -70,7 +72,7 @@ public class searchServlet extends HttpServlet {
         }
     }
 	
-	public List<User> searchUserList(String name, int age, String gender, String email, int jobId) {
+	public List<User> searchUserList(String name, int ageForm, int ageTo, String gender, String email, int jobId) {
         List<User> searchResults = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -79,15 +81,15 @@ public class searchServlet extends HttpServlet {
         try {
         	conn = DatabaseConnection.getConnection();
             
-            StringBuilder sql = new StringBuilder("SELECT *, job.name AS job \r\n"
-            		+ "FROM java_login.user_info\r\n"
+            StringBuilder sql = new StringBuilder("SELECT user_info.id, user_info.name, user_info.age, user_info.gender, user_info.email, job.name AS job\r\n"
+            		+ "FROM user_info\r\n"
             		+ "INNER JOIN job ON user_info.id_job = job.idjob\r\n"
-            		+ "where user_info.is_deleted = 0");
+            		+ "WHERE user_info.is_deleted = 0\r\n");
             if (!name.isEmpty()) {
                 sql.append(" AND user_info.name LIKE ?");
             }
-            if (age > 0) {
-                sql.append(" AND user_info.age = ?");
+            if (ageForm > 0 && ageTo>ageForm) {
+                sql.append(" AND user_info.age > ? AND user_info.age < ?");
             }
             if (!gender.isEmpty()) {
                 sql.append(" AND user_info.gender = ?");
@@ -98,14 +100,18 @@ public class searchServlet extends HttpServlet {
             if (jobId > 0) {
                 sql.append(" AND user_info.id_job = ?");
             }
-            
+            sql.append("ORDER BY user_info.update_date DESC \r\n"
+            		+ "LIMIT 0, 5");
             stmt = conn.prepareStatement(sql.toString());
             int parameterIndex = 1;
             if (!name.isEmpty()) {
                 stmt.setString(parameterIndex++, "%" + name + "%");
             }
-            if (age > 0) {
-                stmt.setInt(parameterIndex++, age);
+            if (ageForm > 0) {
+                stmt.setInt(parameterIndex++, ageForm);
+            }
+            if (ageTo > ageForm) {
+                stmt.setInt(parameterIndex++, ageTo);
             }
             if (!gender.isEmpty()) {
                 stmt.setString(parameterIndex++, gender);
@@ -172,51 +178,81 @@ public class searchServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String formType = request.getParameter("formType");
 
-	    if ("formSearch".equals(formType)) {
-	    	String name = request.getParameter("name");
-	    	String ageParameter = request.getParameter("age");
-	    	int age = 0;
-	    	if (ageParameter != null && !ageParameter.isEmpty()) {
-	    	    age = Integer.parseInt(ageParameter);
-	    	}
-	        String gender = request.getParameter("gender");
-	        String email = request.getParameter("email");
-	        String jobParameter = request.getParameter("job");
-	        int jobId = 0; 
-	        if (!jobParameter.isEmpty()) {
-	        	jobId = Integer.parseInt(request.getParameter("job"));
-	        }
-	        
-	        List<User> searchResults = searchUserList(name, age, gender, email, jobId);
-	        User userSearch = new User(0, name, age, gender, email, jobParameter);
-	        request.setAttribute("userSearch", userSearch);
-	        request.setAttribute("searchResults", searchResults);
-			List<Job> occupations = getOccupations();
-			request.setAttribute("occupations", occupations);
-	        request.getRequestDispatcher("search.jsp").forward(request, response);
-	    } else if ("formTable".equals(formType)) {
-	    	String action = request.getParameter("action");
-		    if ("add".equals(action)) {
-		    	 response.sendRedirect("welcome");
-		    } else if ("edit".equals(action)) {
-		    	 response.sendRedirect("search");
-		    } else if ("delete".equals(action)) {
-		    	String[] selectedIds = request.getParameterValues("selectedIds");
-	    	    if (selectedIds != null && selectedIds.length > 0) {
-	    	        for (String id : selectedIds) {
-	    	            int userId = Integer.parseInt(id);
-	    	            deleteUserInfo(userId);
-	    	        }
-	    	    } else {
-	    	    }
-		    	response.sendRedirect("search");
-		    } else {
-		    	 response.sendRedirect("search");
-		    }
-	    } else {
-	    	 response.sendRedirect("search");
-	    }
+		String name = request.getParameter("name");
+    	String ageParameter = request.getParameter("ageForm");
+    	int age = 0;
+    	if (ageParameter != null && !ageParameter.isEmpty()) {
+    	    age = Integer.parseInt(ageParameter);
+    	}
+    	String ageParameterTo = request.getParameter("ageTo");
+    	int ageTo = 0;
+    	if (ageParameterTo != null && !ageParameterTo.isEmpty()) {
+    		ageTo = Integer.parseInt(ageParameterTo);
+    	}
+        String gender = request.getParameter("gender");
+        String email = request.getParameter("email");
+        String jobParameter = request.getParameter("job");
+        int jobId = 0; 
+        if (!jobParameter.isEmpty()) {
+        	jobId = Integer.parseInt(request.getParameter("job"));
+        }
+        
+        List<User> searchResults = searchUserList(name, age, ageTo, gender, email, jobId);
+        User userSearch = new User(0, name, age, gender, email, jobParameter);
+        request.setAttribute("ageForm", age);
+        request.setAttribute("ageTo", ageTo);
+        request.setAttribute("userSearch", userSearch);
+        request.setAttribute("searchResults", searchResults);
+		List<Job> occupations = getOccupations();
+		request.setAttribute("occupations", occupations);
+        request.getRequestDispatcher("home.jsp").forward(request, response);
+
+			
+//      String formType = request.getParameter("formType");
+//	    if ("formSearch".equals(formType)) {
+//	    	String name = request.getParameter("name");
+//	    	String ageParameter = request.getParameter("age");
+//	    	int age = 0;
+//	    	if (ageParameter != null && !ageParameter.isEmpty()) {
+//	    	    age = Integer.parseInt(ageParameter);
+//	    	}
+//	        String gender = request.getParameter("gender");
+//	        String email = request.getParameter("email");
+//	        String jobParameter = request.getParameter("job");
+//	        int jobId = 0; 
+//	        if (!jobParameter.isEmpty()) {
+//	        	jobId = Integer.parseInt(request.getParameter("job"));
+//	        }
+//	        
+//	        List<User> searchResults = searchUserList(name, age, gender, email, jobId);
+//	        User userSearch = new User(0, name, age, gender, email, jobParameter);
+//	        request.setAttribute("userSearch", userSearch);
+//	        request.setAttribute("searchResults", searchResults);
+//			List<Job> occupations = getOccupations();
+//			request.setAttribute("occupations", occupations);
+//	        request.getRequestDispatcher("search.jsp").forward(request, response);
+//	    } else if ("formTable".equals(formType)) {
+//	    	String action = request.getParameter("action");
+//		    if ("add".equals(action)) {
+//		    	 response.sendRedirect("welcome");
+//		    } else if ("edit".equals(action)) {
+//		    	 response.sendRedirect("search");
+//		    } else if ("delete".equals(action)) {
+//		    	String[] selectedIds = request.getParameterValues("selectedIds");
+//	    	    if (selectedIds != null && selectedIds.length > 0) {
+//	    	        for (String id : selectedIds) {
+//	    	            int userId = Integer.parseInt(id);
+//	    	            deleteUserInfo(userId);
+//	    	        }
+//	    	    } else {
+//	    	    }
+//		    	response.sendRedirect("search");
+//		    } else {
+//		    	 response.sendRedirect("search");
+//		    }
+//	    } else {
+//	    	 response.sendRedirect("search");
+//	    }
 	}
 }

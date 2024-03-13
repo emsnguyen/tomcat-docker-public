@@ -5,14 +5,19 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f2f2f2;
+    background-color: #DFDFDF;
 }
 
 .container {
-    width: 800px;
+    width: 700px;
     background-color: #fff;
     border: 1px solid #ccc;
     padding: 20px;
+}
+
+.backgroundBody{
+	width: 700px;
+	background-color: #DFDFDF;
 }
 
 h1 {
@@ -53,7 +58,6 @@ button {
 }
 
 .results {
-    margin-top: 20px;
     border: 1px solid #ccc;
     padding: 20px;
 }
@@ -86,13 +90,19 @@ button {
     background-color: #ccc;
 }
 
+.color-th{
+	background-color: #1A69C6;
+	color: #fff
+}
+
 p {
 	text-align: right;
 }
 
-input#age,
+input#ageForm,
 input#ageTo {
     width: 50px;
+    margin-left: 20px
 }
 button#add{
 	float: left;
@@ -103,12 +113,17 @@ button#search,
 #delete,
 #cancel{
 	padding: 10px 20px;
+	margin-right:10px
+}
+
+button#search{
+	margin-top: 60px;
+	float: right
 }
 button#delete{
 	background-color: #FF7272;
 }
 button#logout{
-	margin-bottom:10px;
 	float:right;
 }
 button#insert_user{
@@ -125,11 +140,16 @@ button#insert_user{
     width: calc(50% - 10px);
 }
 
-.form-column label,
 .form-column input,
 .form-column select {
-    display: block;
-    margin-bottom: 10px;
+    width:70%
+}
+
+.form-column input#male,
+.form-column input#female {
+    width:5%;
+    margin-right: 0px;
+    margin-left: 10px;
 }
 
 .gender-radio {
@@ -139,5 +159,46 @@ button#insert_user{
 
 .gender-radio label {
     margin-right: 10px;
+}
+
+.fullWidth{
+	width: 260%
+}
+
+.icon-button {
+    background-color: transparent; 
+    border: none; 
+    padding: 0;
+    cursor: pointer;
+}
+
+.icon {
+    display: inline-block;
+    width: 20px; 
+    height: 20px;
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center; 
+    margin-right: 10px;
+}
+
+.icon-logo {
+    display: inline-block;
+    width: 200px; 
+    height: 50px;
+    background-size: contain; 
+    background-repeat: no-repeat;
+    margin-right: 5px;
+    background-image: url('../assets/logo 4.png');
+}
+
+.icon-logout {
+    background-image: url('../assets/logout.png');
+}
+.icon-person {
+    background-image: url('../assets/notifications_none.png');
+}
+.icon-noti {
+    background-image: url('../assets/person_2.png');
 }
 ;

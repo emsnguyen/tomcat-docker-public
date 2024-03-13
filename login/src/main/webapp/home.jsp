@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="com.demo.models.User" %>
+<%@ page import = "com.demo.models.Job" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,74 +12,129 @@
     <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
+	<div class="backgroundBody">
+		<button type="button" id="logo" class="icon-button">
+			<span class="icon-logo"></span>
+		</button>
+	    <button type="button" id="logout" class="icon-button" onClick="Logout()">
+			<span class="icon icon-logout"></span>
+		</button>
+		<button type="button" id="logout" class="icon-button">
+			<span class="icon icon-noti"></span>
+		</button>
+		<button type="button" id="logout" class="icon-button">
+			<span class="icon icon-person"></span>
+		</button>
 
+    </div>
     <div class="container">
-    	<button type="button" id="logout" class="custom-button" onClick="Logout()">Logout</button>
         <h1>User Search</h1>
-        <form action="search" method="post">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" placeholder="Enter name">
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" placeholder="Form">
-            <label for="ageTo">~</label>
-            <input type="number" id="ageTo" name="ageTo" placeholder="To">
-            <label for="gender">Gender:</label>
-		    <input type="radio" id="male" name="gender" value="Male" checked>
-		    <label for="male">Male</label>
-		    <input type="radio" id="female" name="gender" value="Female">
-		    <label for="female">Female</label>
-            <br>
-            <label for="job">Job:</label>
-            <select id="job" name="job">
-                <option value="">All</option>
-                <option value="student">Student</option>
-                <option value="office_worker">Office Worker</option>
-                <option value="teacher">Teacher</option>
-            </select>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" placeholder="Enter email">
-            <button type="submit" id="search" class="custom-button">Search</button>
-            <br>
+        <%
+		    User userSearch = (User) request.getAttribute("userSearch");
+        	Integer ageForm = (Integer) request.getAttribute("ageForm");
+        	Integer ageTo = (Integer) request.getAttribute("ageTo");
+		    String nameValue = (userSearch != null && userSearch.getName() != null) ? userSearch.getName() : "";
+		    int ageValue = (userSearch != null && userSearch.getAge() > 0) ? userSearch.getAge() : 0; 
+		    String genderValue = (userSearch != null && userSearch.getGender() != null) ? userSearch.getGender() : "";
+		    String emailValue = (userSearch != null && userSearch.getEmail() != null) ? userSearch.getEmail() : "";
+		    String jobValue = (userSearch != null && userSearch.getJob() != null) ? userSearch.getJob() : "";
+		%>
+        <form action="home" method="post" class="form-grid">
+            <div class="form-column">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter name">
+                <label for="job">Job:</label>
+                <select id="job" name="job">
+                    <option value="">Select occupation</option>
+				    <%
+				        List<Job> occupations = (List<Job>) request.getAttribute("occupations");
+				        if (occupations != null) {
+				            for (Job occupation : occupations) {
+				            	 String selected = ""; 
+				                 if (jobValue.equals(String.valueOf(occupation.getIdJob()))) {
+				                     selected = "selected";
+				                 }
+				    %>
+				    <option value="<%= occupation.getIdJob() %>"  <%= selected %>> <%= occupation.getName() %></option>
+				    <%
+				            }
+				        }
+				    %>
+                </select>
+                <div class = "fullWidth">
+                	<label for="email">Email:</label>
+	                <input type="email" id="email" name="email" placeholder="Enter email">
+	            </div>
+            </div>
+            <div class="form-column">
+                <label for="age">Age:</label>
+                <input type="number" id="ageForm" name="ageForm">
+                <label >~</label>
+                <input type="number" id="ageTo" name="ageTo">
+                <br>
+                <div class="gender-radio">
+                	<label for="gender">Gender:</label>
+                    <input type="radio" id="male" name="gender" value="Male" <%= (genderValue.equals("Female")) ? "" : "checked" %>>
+                    <label for="male">Male</label>
+                    <input type="radio" id="female" name="gender" value="Female" <%= (genderValue.equals("Female")) ? "checked" : "" %>>
+                    <label for="female">Female</label>
+                </div>
+                <button id = "search" type="submit" class="custom-button">Search</button>
+            </div>
         </form>
         <br>
         <div class="results">
             <p>Showing 1-4 of 154 results</p>
             <table border="1">
-                <tr>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Occupation</th>
-                    <th>Email</th>
-                </tr>
-                <tr  onClick="GoDetail()">
-                    <td>Nguyen Van A</td>
-                    <td>25</td>
-                    <td>Male</td>
-                    <td>Student</td>
-                    <td>nguyenvana@gmail.com</td>
-                </tr>
-                <tr  onClick="GoDetail()">
-                    <td>Tran Thi B</td>
-                    <td>30</td>
-                    <td>Female</td>
-                    <td>Office worker</td>
-                    <td>tranthib@gmail.com</td>
-                </tr>
-                <tr  onClick="GoDetail()">
-                    <td>Le Van C</td>
-                    <td>40</td>
-                    <td>Male</td>
-                    <td>Teacher</td>
-                    <td>levanc@gmail.com</td>
-                </tr>
-                <tr  onClick="GoDetail()">
-                    <td>Pham Thi D</td>
-                    <td>22</td>
-                    <td>Female</td>
-                    <td>Student</td>
-                    <td>phamthid@gmail.com</td>
-                </tr>
+            	<thead>
+	            	<tr>
+	                    <th class="color-th">Name</th>
+	                    <th class="color-th">Age</th>
+	                    <th class="color-th">Gender</th>
+	                    <th class="color-th">Occupation</th>
+	                    <th class="color-th">Email</th>
+	                </tr>
+            	</thead>
+				<tbody>
+				<%
+				    List<User> searchResults = (List<User>) request.getAttribute("searchResults");
+				    if (searchResults != null && !searchResults.isEmpty()) {
+				        for (User user : searchResults) {
+				%>
+				            <tr onclick="">
+				                <td><%= user.getName() %></td>
+				                <td><%= user.getAge() %></td>
+				                <td><%= user.getGender() %></td>
+				                <td><%= user.getJob() %></td>
+				                <td><%= user.getEmail() %></td>
+				            </tr>
+				<%
+				        }
+				    } else {
+				        List<User> userList = (List<User>) request.getAttribute("userList");
+				        if (userList != null && !userList.isEmpty()) {
+				            for (User user : userList) {
+				%>
+				                <tr onclick="GoDetail(<%=user.getId()%>)">
+				                    <td><%= user.getName() %></td>
+				                    <td><%= user.getAge() %></td>
+				                    <td><%= user.getGender() %></td>
+				                    <td><%= user.getJob() %></td>
+				                    <td><%= user.getEmail() %></td>
+				                </tr>
+				<%
+				            }
+				        } else {
+				%>
+				            <tr>
+				                <td colspan="6">No data available</td>
+				            </tr>
+				<%
+				        }
+				    }
+				%>
+
+		        </tbody>
             </table>
             <br>
             <div class="pagination">
@@ -99,11 +157,11 @@ function Logout() {
 }
 
 function add_user() {
-    window.location.href = "add_user.jsp";
+    window.location.href = "user?source=add";
 }
 
-function GoDetail() {
-    window.location.href = "add_user.jsp";
+function GoDetail(userId) {
+    window.location.href = "user?source=detail&id="+userId;
 }
 </script>
 </html>

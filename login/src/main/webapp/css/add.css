@@ -1,0 +1,25 @@
+
+input#age{
+    width: 50px;
+}
+.form-grid {
+    display: flex;
+    flex-direction: column; 
+}
+
+.form-column {
+    width: calc(50%-10px);
+    margin-right: 10px; 
+}
+
+.form-row {
+	display: flex;
+    margin-top: 10px; 
+}
+.form-column label,
+.form-column input,
+.form-column select {
+    display: block;
+    margin-bottom: 10px;
+}
+;
