@@ -101,21 +101,24 @@ public class home extends HttpServlet {
             StringBuilder sql = new StringBuilder("SELECT user_info.id, user_info.name, user_info.age, user_info.gender, user_info.email, job.name AS job\r\n"
             		+ "FROM user_info\r\n"
             		+ "INNER JOIN job ON user_info.id_job = job.idjob\r\n"
-            		+ "WHERE user_info.is_deleted = 0\r\n");
+            		+ "WHERE user_info.is_deleted = 0 ");
             if (!name.isEmpty()) {
-                sql.append(" AND user_info.name LIKE ?");
+                sql.append(" AND user_info.name LIKE ? ");
             }
-            if (ageForm > 0 && ageTo>ageForm) {
-                sql.append(" AND user_info.age > ? AND user_info.age < ?");
+            if (ageForm > 0) {
+                sql.append(" AND user_info.age > ? ");
+            }
+            if (ageTo > 0) {
+                sql.append(" AND user_info.age < ? ");
             }
             if (!gender.isEmpty()) {
-                sql.append(" AND user_info.gender = ?");
+                sql.append(" AND user_info.gender = ? ");
             }
             if (!email.isEmpty()) {
-                sql.append(" AND user_info.email LIKE ?");
+                sql.append(" AND user_info.email LIKE ? ");
             }
             if (jobId > 0) {
-                sql.append(" AND user_info.id_job = ?");
+                sql.append(" AND user_info.id_job = ? \r\n");
             }
             sql.append("ORDER BY user_info.update_date DESC \r\n"
             		+ "LIMIT 0," + rowCount);
@@ -198,12 +201,12 @@ public class home extends HttpServlet {
 
 		String name = request.getParameter("name");
     	String ageParameter = request.getParameter("ageForm");
-    	int age = 0;
+    	int age = -1;
     	if (ageParameter != null && !ageParameter.isEmpty()) {
     	    age = Integer.parseInt(ageParameter);
     	}
     	String ageParameterTo = request.getParameter("ageTo");
-    	int ageTo = 0;
+    	int ageTo = -1;
     	if (ageParameterTo != null && !ageParameterTo.isEmpty()) {
     		ageTo = Integer.parseInt(ageParameterTo);
     	}
@@ -224,52 +227,5 @@ public class home extends HttpServlet {
 		List<Job> occupations = getOccupations();
 		request.setAttribute("occupations", occupations);
         request.getRequestDispatcher("home.jsp").forward(request, response);
-
-			
-//      String formType = request.getParameter("formType");
-//	    if ("formSearch".equals(formType)) {
-//	    	String name = request.getParameter("name");
-//	    	String ageParameter = request.getParameter("age");
-//	    	int age = 0;
-//	    	if (ageParameter != null && !ageParameter.isEmpty()) {
-//	    	    age = Integer.parseInt(ageParameter);
-//	    	}
-//	        String gender = request.getParameter("gender");
-//	        String email = request.getParameter("email");
-//	        String jobParameter = request.getParameter("job");
-//	        int jobId = 0; 
-//	        if (!jobParameter.isEmpty()) {
-//	        	jobId = Integer.parseInt(request.getParameter("job"));
-//	        }
-//	        
-//	        List<User> searchResults = searchUserList(name, age, gender, email, jobId);
-//	        User userSearch = new User(0, name, age, gender, email, jobParameter);
-//	        request.setAttribute("userSearch", userSearch);
-//	        request.setAttribute("searchResults", searchResults);
-//			List<Job> occupations = getOccupations();
-//			request.setAttribute("occupations", occupations);
-//	        request.getRequestDispatcher("search.jsp").forward(request, response);
-//	    } else if ("formTable".equals(formType)) {
-//	    	String action = request.getParameter("action");
-//		    if ("add".equals(action)) {
-//		    	 response.sendRedirect("welcome");
-//		    } else if ("edit".equals(action)) {
-//		    	 response.sendRedirect("search");
-//		    } else if ("delete".equals(action)) {
-//		    	String[] selectedIds = request.getParameterValues("selectedIds");
-//	    	    if (selectedIds != null && selectedIds.length > 0) {
-//	    	        for (String id : selectedIds) {
-//	    	            int userId = Integer.parseInt(id);
-//	    	            deleteUserInfo(userId);
-//	    	        }
-//	    	    } else {
-//	    	    }
-//		    	response.sendRedirect("search");
-//		    } else {
-//		    	 response.sendRedirect("search");
-//		    }
-//	    } else {
-//	    	 response.sendRedirect("search");
-//	    }
 	}
 }

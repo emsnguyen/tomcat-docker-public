@@ -65,7 +65,7 @@
 	                <input type="text" id="name" name="name" value="<%= userInfo==null ? "" : userInfo.getName() %>" placeholder="Enter name" <%= "detail".equals(source) ? "readonly" : "" %>>
 	                <label for="job">Job:</label>
 	                <select id="job" name="job">
-				    <option value="">Select occupation</option>
+				    <option value="" <%="detail".equals(source) ? "disabled" : "" %>>Select occupation</option>
 						<%
 						    List<Job> occupations = (List<Job>) request.getAttribute("occupations");
 						    String selected = "";
@@ -75,7 +75,7 @@
 						        		selected = "selected";
 						        	}
 						%>
-						<option value="<%= occupation.getIdJob() %>" <%=selected%>><%= occupation.getName() %></option>
+						<option value="<%= occupation.getIdJob() %>" <%=selected%> <%="detail".equals(source) ? "disabled" : "" %>><%= occupation.getName()  %></option>
 						<%
 						        }
 						    }
@@ -89,9 +89,9 @@
 	                <input type="number" id="age" name="age" value="<%=userInfo==null ? "" : userInfo.getAge() %>" placeholder="Age" <%="detail".equals(source) ? "readonly" : "" %>>
 	                <label for="gender">Gender:</label>
 	                <div class="gender-radio">
-	                    <input type="radio" id="male" name="gender" value="Male" checked>
+	                    <input type="radio" id="male" name="gender" value="Male" <%=userInfo==null ? "" : "Male".equals(userInfo.getGender()) ? "checked" : "" %> <%="detail".equals(source) ? "disabled" : "" %>>
 	                    <label for="male">Male</label>
-	                    <input type="radio" id="female" name="gender" value="Female">
+	                    <input type="radio" id="female" name="gender" value="Female" <%=userInfo==null ? "" : "Female".equals(userInfo.getGender()) ? "checked" : "" %> <%="detail".equals(source) ? "disabled" : "" %>>
 	                    <label for="female">Female</label>
 	                </div>
 	            </div>

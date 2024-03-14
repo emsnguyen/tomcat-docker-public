@@ -1,6 +1,6 @@
 
 input#age{
-    width: 50px;
+    width: 100px;
 }
 .form-grid {
     display: flex;
@@ -9,17 +9,17 @@ input#age{
 
 .form-column {
     width: calc(50%-10px);
-    margin-right: 10px; 
+    margin-right: 20px; 
 }
 
 .form-row {
 	display: flex;
-    margin-top: 10px; 
+    margin-top: 20px; 
 }
 .form-column label,
 .form-column input,
 .form-column select {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 ;

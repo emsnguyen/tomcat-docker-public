@@ -68,13 +68,13 @@
             </div>
             <div class="form-column">
                 <label for="age">Age:</label>
-                <input type="number" id="ageForm" name="ageForm"  value="<%= ageForm%>">
-                <label >~</label>
-                <input type="number" id="ageTo" name="ageTo" value="<%=ageTo%>">
-                <br>
+                <input type="number" id="ageForm" name="ageForm"  value="<%= (ageForm != null && ageForm == -1) ? "" : ageForm %>">
+				<label>~</label>
+				<input type="number" id="ageTo" name="ageTo" value="<%= (ageTo != null && ageTo == -1) ? "" : ageTo %>">
+				<br>
                 <div class="gender-radio">
                 	<label for="gender">Gender:</label>
-                    <input type="radio" id="male" name="gender" value="Male" <%= (genderValue.equals("Female")) ? "" : "checked" %>>
+                    <input type="radio" id="male" name="gender" value="Male" <%= (genderValue.equals("Male")) ? "checked" : ""%>>
                     <label for="male">Male</label>
                     <input type="radio" id="female" name="gender" value="Female" <%= (genderValue.equals("Female")) ? "checked" : "" %>>
                     <label for="female">Female</label>
@@ -101,10 +101,10 @@
 				    if (searchResults != null && !searchResults.isEmpty()) {
 				        for (User user : searchResults) {
 				%>
-				            <tr onclick="">
+				            <tr onclick="GoDetail(<%=user.getId()%>)">
 				                <td><%= user.getName() %></td>
-				                <td><%= user.getAge() %></td>
-				                <td><%= user.getGender() %></td>
+				                <td class="text-right"><%= user.getAge() %></td>
+				            	<td><%= user.getGender() %></td>
 				                <td><%= user.getJob() %></td>
 				                <td><%= user.getEmail() %></td>
 				            </tr>
@@ -117,7 +117,7 @@
 				%>
 				                <tr onclick="GoDetail(<%=user.getId()%>)">
 				                    <td><%= user.getName() %></td>
-				                    <td><%= user.getAge() %></td>
+				                    <td class="text-right"><%= user.getAge() %></td>
 				                    <td><%= user.getGender() %></td>
 				                    <td><%= user.getJob() %></td>
 				                    <td><%= user.getEmail() %></td>
@@ -138,7 +138,7 @@
             </table>
             <br>
             <div class="pagination">
-            	<button id="add" type="button" class="custom-button" onclick="add_user()">Add user</button>
+            	
                 <a href="#">&lt;</a>
                 <a href="#">1</a>
                 <a href="#">2</a>
@@ -148,6 +148,7 @@
                 <a href="#">&gt;</a>
             </div>
         </div>
+        <button id="add" type="button" class="custom-button" onclick="add_user()">Add user</button>
     </div>
 </body>
 <script>
