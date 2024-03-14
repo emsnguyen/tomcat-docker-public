@@ -173,6 +173,10 @@ tr:hover {
     margin-right: 20px;
 }
 
+.gender-radio {
+    margin: 20px;
+}
+
 .fullWidth{
 	width: 260%
 }

@@ -20,36 +20,42 @@ import com.demo.models.User;
 
 @WebServlet("/home")
 public class home extends HttpServlet {
-	
+	public int searchTotal = 0;
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<User> lstUser = getUserInfo();
+		int recordsPerPage = 5;
+        int currentPage = 1; 
+        String currentPageParam = req.getParameter("currentPage");
+        if (currentPageParam != null && !currentPageParam.isEmpty()) {
+            currentPage = Integer.parseInt(currentPageParam);
+        }
+        int start = currentPage * recordsPerPage - recordsPerPage;
+		List<User> lstUser = getUserInfo(start, recordsPerPage);
+		int totalRecords = getTotalRecords();
+        int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+		
 		req.setAttribute("userList", lstUser);
+		req.setAttribute("totalPages", totalPages);
+		req.setAttribute("totalRecords", totalRecords);
+		req.setAttribute("currentPage", currentPage);
 		List<Job> occupations = getOccupations();
 		req.setAttribute("occupations", occupations);
 	    RequestDispatcher dispatcher = req.getRequestDispatcher("home.jsp");
 	    dispatcher.forward(req, resp);
 	}
 
-	public static  List<User> getUserInfo() {
+	public static  List<User> getUserInfo(int start, int recordsPerPage) {
     	List<User> lstUser = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String sCount = "SELECT COUNT(*) AS total_rows FROM user_info";
-            PreparedStatement stmt = conn.prepareStatement(sCount.toString());
-            ResultSet rs = stmt.executeQuery(sCount);
-            int rowCount = 0;
-            if (rs.next()) {
-                rowCount = rs.getInt("total_rows");
-            }
-            if (rowCount>5)
-            	rowCount = 5;
             String sql = "SELECT user_info.id, user_info.name, user_info.age, user_info.gender, user_info.email, job.name AS job\r\n"
             		+ "FROM user_info\r\n"
             		+ "INNER JOIN job ON user_info.id_job = job.idjob\r\n"
             		+ "WHERE user_info.is_deleted = 0\r\n"
             		+ "ORDER BY user_info.update_date DESC\r\n"
-            		+ "LIMIT 0," + rowCount;
+            		+ "LIMIT ?,? ";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            	statement.setInt(1, start);
+            	statement.setInt(2, recordsPerPage);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                     	User user = new User(0,"", 0, "", "", "");
@@ -69,6 +75,20 @@ public class home extends HttpServlet {
         return lstUser;
     }
 	
+	public static int getTotalRecords() {
+        int totalRecords = 0;
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) AS total FROM user_info WHERE user_info.is_deleted = 0")) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                totalRecords = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return totalRecords;
+    }
+	
 	private void deleteUserInfo(int userId) {
         try (Connection conn = DatabaseConnection.getConnection()) {
             String sql = "UPDATE user_info SET is_deleted = ?  WHERE id = ?";
@@ -81,69 +101,81 @@ public class home extends HttpServlet {
         }
     }
 	
-	public List<User> searchUserList(String name, int ageForm, int ageTo, String gender, String email, int jobId) {
+	public List<User> searchUserList(int start, int recordsPerPage, String name, int ageForm, int ageTo, String gender, String email, int jobId) {
         List<User> searchResults = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
+        PreparedStatement stmtCount = null;
         ResultSet rs = null;
         
         try {
         	conn = DatabaseConnection.getConnection();
-            String sCount = "SELECT COUNT(*) AS total_rows FROM user_info";
-            stmt = conn.prepareStatement(sCount.toString());
-            rs = stmt.executeQuery(sCount);
-            int rowCount = 0;
-            if (rs.next()) {
-                rowCount = rs.getInt("total_rows");
-            }
-            if (rowCount>5)
-            	rowCount = 5;
-            StringBuilder sql = new StringBuilder("SELECT user_info.id, user_info.name, user_info.age, user_info.gender, user_info.email, job.name AS job\r\n"
+        	StringBuilder sqlCount = new StringBuilder("SELECT COUNT(*) AS total FROM user_info WHERE user_info.is_deleted = 0 ");
+        	StringBuilder sql = new StringBuilder("SELECT user_info.id, user_info.name, user_info.age, user_info.gender, user_info.email, job.name AS job\r\n"
             		+ "FROM user_info\r\n"
             		+ "INNER JOIN job ON user_info.id_job = job.idjob\r\n"
             		+ "WHERE user_info.is_deleted = 0 ");
             if (!name.isEmpty()) {
                 sql.append(" AND user_info.name LIKE ? ");
+                sqlCount.append(" AND user_info.name LIKE ? ");
             }
             if (ageForm > 0) {
                 sql.append(" AND user_info.age > ? ");
+                sqlCount.append(" AND user_info.age > ? ");
             }
             if (ageTo > 0) {
                 sql.append(" AND user_info.age < ? ");
+                sqlCount.append(" AND user_info.age < ? ");
             }
             if (!gender.isEmpty()) {
                 sql.append(" AND user_info.gender = ? ");
+                sqlCount.append(" AND user_info.gender = ? ");
             }
             if (!email.isEmpty()) {
                 sql.append(" AND user_info.email LIKE ? ");
+                sqlCount.append(" AND user_info.email LIKE ? ");
             }
             if (jobId > 0) {
                 sql.append(" AND user_info.id_job = ? \r\n");
+                sqlCount.append(" AND user_info.id_job = ? \r\n");
             }
             sql.append("ORDER BY user_info.update_date DESC \r\n"
-            		+ "LIMIT 0," + rowCount);
+            		+ "LIMIT ?,? ");
             stmt = conn.prepareStatement(sql.toString());
+            stmtCount = conn.prepareStatement(sqlCount.toString());
             int parameterIndex = 1;
+            int parameterIndex2 = 1;
             if (!name.isEmpty()) {
                 stmt.setString(parameterIndex++, "%" + name + "%");
+                stmtCount.setString(parameterIndex2++, "%" + name + "%");
             }
             if (ageForm > 0) {
                 stmt.setInt(parameterIndex++, ageForm);
+                stmtCount.setInt(parameterIndex2++, ageForm);
             }
             if (ageTo > ageForm) {
                 stmt.setInt(parameterIndex++, ageTo);
+                stmtCount.setInt(parameterIndex2++, ageTo);
             }
             if (!gender.isEmpty()) {
                 stmt.setString(parameterIndex++, gender);
+                stmtCount.setString(parameterIndex2++, gender);
             }
             if (!email.isEmpty()) {
                 stmt.setString(parameterIndex++, "%" + email + "%");
+                stmtCount.setString(parameterIndex2++, "%" + email + "%");
             }
             if (jobId > 0) {
                 stmt.setInt(parameterIndex++, jobId);
+                stmtCount.setInt(parameterIndex2++, jobId);
             }
+            stmt.setInt(parameterIndex++, start);
+            stmt.setInt(parameterIndex++, recordsPerPage);
             rs = stmt.executeQuery();
-            
+            ResultSet rsCount = stmtCount.executeQuery();
+            while (rsCount.next()) {
+            	searchTotal = rsCount.getInt("total");
+            }
             while (rs.next()) {
             	User user = new User(0,"", 0, "", "", "");
                 user.setId(rs.getInt("id"));
@@ -218,12 +250,25 @@ public class home extends HttpServlet {
         	jobId = Integer.parseInt(request.getParameter("job"));
         }
         
-        List<User> searchResults = searchUserList(name, age, ageTo, gender, email, jobId);
+        
+        int recordsPerPage = 5;
+        int currentPage = 1; 
+        String currentPageParam = request.getParameter("currentPage");
+        if (currentPageParam != null && !currentPageParam.isEmpty()) {
+            currentPage = Integer.parseInt(currentPageParam);
+        }
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        List<User> searchResults = searchUserList(start, recordsPerPage,name, age, ageTo, gender, email, jobId);
+        int totalPages = (int) Math.ceil((double) searchTotal / recordsPerPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalRecords", searchTotal);
+        
         User userSearch = new User(0, name, age, gender, email, jobParameter);
         request.setAttribute("ageForm", age);
         request.setAttribute("ageTo", ageTo);
         request.setAttribute("userSearch", userSearch);
-        request.setAttribute("searchResults", searchResults);
+        request.setAttribute("userList", searchResults);
 		List<Job> occupations = getOccupations();
 		request.setAttribute("occupations", occupations);
         request.getRequestDispatcher("home.jsp").forward(request, response);

@@ -74,7 +74,7 @@
 				<br>
                 <div class="gender-radio">
                 	<label for="gender">Gender:</label>
-                    <input type="radio" id="male" name="gender" value="Male" <%= (genderValue.equals("Male")) ? "checked" : ""%>>
+                    <input type="radio" id="male" name="gender" value="Male" <%= (genderValue.equals("Female")) ? "" : "checked"%>>
                     <label for="male">Male</label>
                     <input type="radio" id="female" name="gender" value="Female" <%= (genderValue.equals("Female")) ? "checked" : "" %>>
                     <label for="female">Female</label>
@@ -84,7 +84,18 @@
         </form>
         <br>
         <div class="results">
-            <p>Showing 1-4 of 154 results</p>
+	        <% if (request.getAttribute("totalRecords") != null && request.getAttribute("currentPage") != null && (int)request.getAttribute("totalRecords") > 0) { %>
+			    <% 
+			        int currentPage = (int) request.getAttribute("currentPage");
+			        int recordsPerPage = 5;
+			        int totalRecords = (int) request.getAttribute("totalRecords");
+			        int startRecord = (currentPage - 1) * recordsPerPage + 1;
+			        int endRecord = Math.min(currentPage * recordsPerPage, totalRecords);
+			    %>
+			    <p>Showing <%= startRecord %>-
+			       <%= endRecord %> 
+			       of <%= totalRecords %> results</p>
+			<% } %>
             <table border="1">
             	<thead>
 	            	<tr>
@@ -97,59 +108,49 @@
             	</thead>
 				<tbody>
 				<%
-				    List<User> searchResults = (List<User>) request.getAttribute("searchResults");
-				    if (searchResults != null && !searchResults.isEmpty()) {
-				        for (User user : searchResults) {
+			        List<User> userList = (List<User>) request.getAttribute("userList");
+			        if (userList != null && !userList.isEmpty()) {
+			            for (User user : userList) {
 				%>
-				            <tr onclick="GoDetail(<%=user.getId()%>)">
-				                <td><%= user.getName() %></td>
-				                <td class="text-right"><%= user.getAge() %></td>
-				            	<td><%= user.getGender() %></td>
-				                <td><%= user.getJob() %></td>
-				                <td><%= user.getEmail() %></td>
-				            </tr>
+			                <tr onclick="GoDetail(<%=user.getId()%>)">
+			                    <td><%= user.getName() %></td>
+			                    <td class="text-right"><%= user.getAge() %></td>
+			                    <td><%= user.getGender() %></td>
+			                    <td><%= user.getJob() %></td>
+			                    <td><%= user.getEmail() %></td>
+			                </tr>
 				<%
-				        }
-				    } else {
-				        List<User> userList = (List<User>) request.getAttribute("userList");
-				        if (userList != null && !userList.isEmpty()) {
-				            for (User user : userList) {
-				%>
-				                <tr onclick="GoDetail(<%=user.getId()%>)">
-				                    <td><%= user.getName() %></td>
-				                    <td class="text-right"><%= user.getAge() %></td>
-				                    <td><%= user.getGender() %></td>
-				                    <td><%= user.getJob() %></td>
-				                    <td><%= user.getEmail() %></td>
-				                </tr>
-				<%
-				            }
-				        } else {
+			            }
+			        } else {
 				%>
 				            <tr>
 				                <td colspan="6">No data available</td>
 				            </tr>
 				<%
-				        }
 				    }
 				%>
 
 		        </tbody>
             </table>
             <br>
+            <%
+            	int total = (int)request.getAttribute("totalPages");
+            	if(total>1){
+            %>
             <div class="pagination">
-            	
-                <a href="#">&lt;</a>
-                <a href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">4</a>
-                <a href="#">5</a>
-                <a href="#">&gt;</a>
-            </div>
-        </div>
+	            <% if ((int)request.getAttribute("currentPage") > 1) { %>
+	                <a href="home?currentPage=<%= (int)request.getAttribute("currentPage") - 1 %>">&lt;</a>
+	            <% } %>
+	            <% for (int i = 1; i <= total; i++) { %>
+	                <a href="home?currentPage=<%= i %>"><%= i %></a>
+	            <% } %>
+	            <% if ((int)request.getAttribute("currentPage") < (int)request.getAttribute("totalPages")) { %>
+	                <a href="home?currentPage=<%= (int)request.getAttribute("currentPage") + 1 %>">&gt;</a>
+	            <% } %>
+	        </div>
+	        <%	} %>
+    	</div>
         <button id="add" type="button" class="custom-button" onclick="add_user()">Add user</button>
-    </div>
 </body>
 <script>
 function Logout() {

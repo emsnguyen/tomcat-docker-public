@@ -81,8 +81,14 @@
 						    }
 						%>
 					</select>
-	                <label for="email">Email:</label>
-	                <input type="email" id="email" name="email" value="<%=userInfo==null ? "" : userInfo.getEmail() %>" placeholder="Enter email" <%="detail".equals(source) ? "readonly" : "" %>>
+					<%
+					    if (("add".equals(source))) {
+					%>
+				        	<label for="email">Email:</label>
+			                <input type="email" id="email" name="email" value="<%=userInfo==null ? "" : userInfo.getEmail() %>" placeholder="Enter email" <%="detail".equals(source) ? "readonly" : "" %>>
+		        	<%
+					    }
+		        	%>
 	            </div>
 	            <div class="form-column">
 	                <label for="age">Age:</label>
@@ -94,6 +100,14 @@
 	                    <input type="radio" id="female" name="gender" value="Female" <%=userInfo==null ? "" : "Female".equals(userInfo.getGender()) ? "checked" : "" %> <%="detail".equals(source) ? "disabled" : "" %>>
 	                    <label for="female">Female</label>
 	                </div>
+	                <%
+					    if (!("add".equals(source))) {
+					%>
+				        	<label for="email">Email:</label>
+			                <input type="email" id="email" name="email" value="<%=userInfo==null ? "" : userInfo.getEmail() %>" placeholder="Enter email" <%="detail".equals(source) ? "readonly" : "" %>>
+		        	<%
+					    }
+		        	%>
 	            </div>
             </div>
             <div class="form-row">
@@ -113,7 +127,7 @@
 			<% 
 			    }
 			%>
-		        <button type="submit" id="cancel" class="custom-button" name="action" value="cancel">Cancel</button>
+		  
 		    </div>
         </form>
     </div>
