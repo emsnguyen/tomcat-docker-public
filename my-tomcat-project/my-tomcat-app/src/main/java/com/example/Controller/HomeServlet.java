@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Properties;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.json.JSONObject;
 
 import com.example.DAO.DBManager;
@@ -20,13 +21,15 @@ import com.example.DAO.UserDAO;
 import com.example.Model.Job;
 import com.example.Model.User;
 
-@WebServlet(urlPatterns = { "/home", "/home/detail", "/home/search" })
+@WebServlet(urlPatterns = { "/home", "/home/search" })
 
 public class HomeServlet extends HttpServlet {
 
     private Connection con;
     private UserDAO userDao;
     private JobDAO jobDao;
+    private int pageSize;
+    private int pageNumber;
 
     @Override
     public void init() throws ServletException {
@@ -36,6 +39,15 @@ public class HomeServlet extends HttpServlet {
             this.userDao = new UserDAO(con);
             this.jobDao = new JobDAO(con);
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Properties properties = new Properties();
+        try {
+            properties.load(getServletContext().getResourceAsStream("/WEB-INF/config.properties"));
+            this.pageSize = Integer.parseInt(properties.getProperty("pageSize"));
+            this.pageNumber = Integer.parseInt(properties.getProperty("pageNumber"));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -77,16 +89,30 @@ public class HomeServlet extends HttpServlet {
 
     private void listUser(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List<User> listUser = userDao.getAllUsers();
+
+        String pageStr = request.getParameter("page");
+        if (pageStr != null && !pageStr.isEmpty()) {
+            pageNumber = Integer.parseInt(pageStr);
+        }
+
+        List<User> listUser = userDao.Pagination(pageNumber, pageSize);
         List<Job> listJob = jobDao.getAllJob();
         for (User user : listUser) {
             int jobId = user.getJob_id();
             String jobName = jobDao.getJobNameById(jobId);
             user.setJob_name(jobName);
         }
+
+        // Tính toán tổng số trang
+        int totalUsers = userDao.getAllUsers().size();
+        int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
+
         request.setAttribute("listUser", listUser);
         request.setAttribute("listJob", listJob);
-
+        request.setAttribute("pageNumber", pageNumber);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("totalUsers", totalUsers);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/home.jsp");
         dispatcher.forward(request, response);
     }
@@ -101,11 +127,10 @@ public class HomeServlet extends HttpServlet {
 
         // Tạo đối tượng JSON từ thông tin người dùng
         JSONObject userJSON = new JSONObject();
+        userJSON.put("id", user.getId());
         userJSON.put("name", user.getName());
-        userJSON.put("age", user.getAge());
-        userJSON.put("gender", user.getGender());
-        userJSON.put("email", user.getEmail());
         userJSON.put("job_name", jobName);
+        userJSON.put("email", user.getEmail());
 
         // Gửi phản hồi JSON về trình duyệt
         response.setContentType("application/json");
@@ -115,37 +140,56 @@ public class HomeServlet extends HttpServlet {
 
     private void performSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-
+        List<Job> listJob = jobDao.getAllJob();
         // Lấy các thông tin tìm kiếm từ request
-        String name = request.getParameter("name");
-        // String email = request.getParameter("email");
-        // int job = Integer.parseInt(request.getParameter("job"));
-        // boolean gender = Boolean.parseBoolean(request.getParameter("gender"));
-        // int minAge = Integer.parseInt(request.getParameter("minAge"));
-        // int maxAge = Integer.parseInt(request.getParameter("maxAge"));
+        String name = request.getParameter("name").trim();
+        String email = request.getParameter("email").trim();
+        String jobParam = request.getParameter("job_id");
+        String genderParam = request.getParameter("gender");
 
+        Integer job = null;
+        if (jobParam != null && !jobParam.isEmpty()) {
+            job = Integer.parseInt(jobParam);
+        }
+
+        Boolean gender = null;
+        if (genderParam != null && !genderParam.isEmpty()) {
+            gender = "1".equals(genderParam.trim());
+        }
+
+        int minAge = (request.getParameter("minAge") != null && !request.getParameter("minAge").isEmpty())
+                ? Integer.parseInt(request.getParameter("minAge").trim())
+                : 0;
+
+        int maxAge = (request.getParameter("maxAge") != null && !request.getParameter("maxAge").isEmpty())
+                ? Integer.parseInt(request.getParameter("maxAge").trim())
+                : 0;
         // Tạo đối tượng User chứa thông tin tìm kiếm
         User searchCriteria = new User();
         searchCriteria.setName(name);
-        // searchCriteria.setEmail(email);
-        // searchCriteria.setJob_id(job);
-        // searchCriteria.setGender(gender);
-
-        // Gọi phương thức searchUsers từ DAO
-        // List<User> searchResult = userDao.searchUsers(searchCriteria, minAge,
-        // maxAge);
-        List<User> searchResult = userDao.searchUsers(searchCriteria);
-
-        // Đặt kết quả tìm kiếm vào request để hiển thị trên trang
-        for (User user : searchResult) {
-            System.out.println("User ID: " + user.getId());
-            System.out.println("Name: " + user.getName());
-            System.out.println("Email: " + user.getEmail());
-            // Thêm các thuộc tính khác của User tại đây
+        searchCriteria.setEmail(email);
+        if (job != null) {
+            searchCriteria.setJob_id(job);
         }
-        request.setAttribute("searchResult", searchResult);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/search.jsp");
-        dispatcher.forward(request, response);
-    }
+        if (genderParam != null && !genderParam.isEmpty()) {
+            searchCriteria.setGender(gender);
+        }
+        // Gọi phương thức searchUsers từ DAO
+        List<User> searchResult = userDao.searchUsers(searchCriteria, minAge,
+                maxAge);
 
+        for (User user : searchResult) {
+            int jobId = user.getJob_id();
+            String jobName = jobDao.getJobNameById(jobId);
+            user.setJob_name(jobName);
+        }
+
+        request.setAttribute("pageSize", pageSize);
+
+        int totalUsers = userDao.getAllUsers().size();
+        request.setAttribute("totalUsers", totalUsers);
+        request.setAttribute("listJob", listJob);
+        request.setAttribute("searchResult", searchResult);
+        request.getRequestDispatcher("/search.jsp").forward(request, response);
+    }
 }

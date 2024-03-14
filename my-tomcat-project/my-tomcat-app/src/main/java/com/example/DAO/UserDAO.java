@@ -17,8 +17,32 @@ public class UserDAO {
 
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE is_delete = false";
+        String query = "SELECT * FROM user WHERE is_delete = false ORDER BY id DESC";
         try (PreparedStatement ps = con.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setContact(rs.getString("contact"));
+                user.setGender(rs.getBoolean("gender"));
+                user.setJob_id(rs.getInt("job_id"));
+                user.setAge(rs.getInt("age"));
+                users.add(user);
+            }
+        }
+        return users;
+    }
+
+    public List<User> Pagination(int pageNumber, int pageSize) throws SQLException {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE is_delete = false ORDER BY id DESC LIMIT ? OFFSET ?";
+        int offset = (pageNumber - 1) * pageSize;
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, pageSize);
+            ps.setInt(2, offset);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 User user = new User();
@@ -57,12 +81,10 @@ public class UserDAO {
         return user;
     }
 
-    // public List<User> searchUsers(User searchCriteria, int minAge, int maxAge)
-    // throws SQLException {
-    public List<User> searchUsers(User searchCriteria) throws SQLException {
+    public List<User> searchUsers(User searchCriteria, int minAge, int maxAge)
+            throws SQLException {
         List<User> users = new ArrayList<>();
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM user WHERE is_delete = 0");
-        System.out.println("searchCriteria" + queryBuilder);
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM user WHERE is_delete = 0 ");
         if (searchCriteria.getName() != null && !searchCriteria.getName().isEmpty()) {
             queryBuilder.append(" AND name LIKE ?");
         }
@@ -73,15 +95,23 @@ public class UserDAO {
         if (searchCriteria.getJob_id() > 0) {
             queryBuilder.append(" AND job_id = ?");
         }
-        if (searchCriteria.getGender()) {
+
+        Boolean gender = searchCriteria.getGender();
+
+        if (gender != null) {
             queryBuilder.append(" AND gender = ?");
         }
-        // if (minAge > 0) {
-        // queryBuilder.append(" AND age >= ?");
-        // }
-        // if (maxAge > 0) {
-        // queryBuilder.append(" AND age <= ?");
-        // }
+        if (minAge > 0) {
+            queryBuilder.append(" AND age >= ?");
+        }
+        if (maxAge > 0) {
+            queryBuilder.append(" AND age <= ?");
+        }
+        if (minAge > 0 && maxAge > 0) {
+            queryBuilder.append(" AND age BETWEEN ? AND ?");
+        }
+
+        queryBuilder.append(" ORDER BY id DESC");
 
         try (PreparedStatement ps = con.prepareStatement(queryBuilder.toString())) {
             int parameterIndex = 1;
@@ -95,16 +125,20 @@ public class UserDAO {
             if (searchCriteria.getJob_id() > 0) {
                 ps.setInt(parameterIndex++, searchCriteria.getJob_id());
             }
-            if (searchCriteria.getGender()) {
+            if (gender != null) {
                 ps.setBoolean(parameterIndex++, searchCriteria.getGender());
             }
-            // if (minAge > 0) {
-            // ps.setInt(parameterIndex++, minAge);
-            // }
-            // if (maxAge > 0) {
-            // ps.setInt(parameterIndex++, maxAge);
-            // }
-
+            if (minAge > 0) {
+                ps.setInt(parameterIndex++, minAge);
+            }
+            if (maxAge > 0) {
+                ps.setInt(parameterIndex++, maxAge);
+            }
+            if (minAge > 0 && maxAge > 0) {
+                ps.setInt(parameterIndex++, minAge);
+                ps.setInt(parameterIndex++, maxAge);
+            }
+            System.out.println(ps);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 User user = new User();

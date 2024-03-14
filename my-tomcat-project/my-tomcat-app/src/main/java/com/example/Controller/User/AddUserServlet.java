@@ -19,7 +19,7 @@ import com.example.DAO.UserDAO;
 import com.example.Model.Job;
 import com.example.Model.User;
 
-@WebServlet(urlPatterns = { "/user", "/user/insert", "/user/edit", "/user/update", "/user/delete" })
+@WebServlet(urlPatterns = { "/user", "/user/insert", "/user/edit", "/user/update", "/user/delete", "/user/detail", })
 public class AddUserServlet extends HttpServlet {
     private Connection con;
     private UserDAO userDao;
@@ -69,6 +69,9 @@ public class AddUserServlet extends HttpServlet {
                     case "/user/delete":
                         deleteUser(request, response);
                         break;
+                    case "/user/detail":
+                        showDetailForm(request, response);
+                        break;
                     case "/user":
                         showForm(request, response);
                         break;
@@ -101,61 +104,88 @@ public class AddUserServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
+    private void showDetailForm(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        int userId = Integer.parseInt(request.getParameter("id"));
+        User userExist = userDao.getUserById(userId);
+        int jobId = userExist.getJob_id();
+        String jobName = jobDao.getJobNameById(jobId);
+        userExist.setJob_name(jobName);
+        request.setAttribute("userExist", userExist);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(
+                "/detail.jsp");
+        dispatcher.forward(request, response);
+    }
+
     private void createUser(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String contact = request.getParameter("contact");
-        boolean gender = "1".equals(request.getParameter("gender"));
-        int job_id = Integer.parseInt(request.getParameter("job_id"));
-        int age = Integer.parseInt(request.getParameter("age"));
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("email") != null) {
+            String currentUser = (String) session.getAttribute("email");
+            String name = request.getParameter("name");
+            String email = request.getParameter("email");
+            String contact = request.getParameter("contact");
+            boolean gender = "1".equals(request.getParameter("gender"));
+            int job_id = Integer.parseInt(request.getParameter("job_id"));
+            int age = Integer.parseInt(request.getParameter("age"));
 
-        User newUser = new User();
-        newUser.setName(name);
-        newUser.setEmail(email);
-        newUser.setPassword("password");
-        newUser.setContact(contact);
-        newUser.setGender(gender);
-        newUser.setJob_id(job_id);
-        newUser.setAge(age);
-        newUser.setis_delete(false);
+            User newUser = new User();
+            newUser.setName(name);
+            newUser.setEmail(email);
+            newUser.setPassword("password");
+            newUser.setContact(contact);
+            newUser.setGender(gender);
+            newUser.setJob_id(job_id);
+            newUser.setAge(age);
+            newUser.setis_delete(false);
+            newUser.setCreated_by(currentUser);
 
-        userDao.createUser(newUser);
+            userDao.createUser(newUser);
+        }
 
         response.sendRedirect("/my-tomcat-app/home");
     }
 
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("email") != null) {
+            String currentUser = (String) session.getAttribute("email");
 
-        int userId = Integer.parseInt(request.getParameter("id"));
+            int userId = Integer.parseInt(request.getParameter("id"));
+            String name = request.getParameter("name");
+            String email = request.getParameter("email");
+            String contact = request.getParameter("contact");
+            boolean gender = "1".equals(request.getParameter("gender"));
+            int job_id = Integer.parseInt(request.getParameter("job_id"));
+            int age = Integer.parseInt(request.getParameter("age"));
+            User updateUser = new User();
 
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String contact = request.getParameter("contact");
-        boolean gender = "1".equals(request.getParameter("gender"));
-        int job_id = Integer.parseInt(request.getParameter("job_id"));
-        int age = Integer.parseInt(request.getParameter("age"));
-        User updateUser = new User();
+            updateUser.setId(userId);
+            updateUser.setName(name);
+            updateUser.setEmail(email);
+            updateUser.setPassword("password");
+            updateUser.setContact(contact);
+            updateUser.setGender(gender);
+            updateUser.setJob_id(job_id);
+            updateUser.setAge(age);
+            updateUser.setUpdated_by(currentUser);
 
-        updateUser.setId(userId);
-        updateUser.setName(name);
-        updateUser.setEmail(email);
-        updateUser.setPassword("password");
-        updateUser.setContact(contact);
-        updateUser.setGender(gender);
-        updateUser.setJob_id(job_id);
-        updateUser.setAge(age);
-
-        userDao.updateUser(updateUser);
-
+            userDao.updateUser(updateUser);
+        }
         response.sendRedirect("/my-tomcat-app/home");
     }
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        int userId = Integer.parseInt(request.getParameter("id"));
-        userDao.deleteUser(userId);
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("email") != null) {
+            String currentUser = (String) session.getAttribute("email");
+            int userId = Integer.parseInt(request.getParameter("id"));
+            User deleteUser = new User();
+            deleteUser.setDeleted_by(currentUser);
+            userDao.deleteUser(userId);
+        }
 
         response.sendRedirect("/my-tomcat-app/home");
     }

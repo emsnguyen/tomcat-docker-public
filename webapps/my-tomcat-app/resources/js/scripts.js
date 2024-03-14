@@ -50,39 +50,31 @@ window.addEventListener('DOMContentLoaded', event => {
             }
         });
     });
-    
     $(document).ready(function(){
-        // Activate tooltip
-        $('[data-toggle="tooltip"]').tooltip();
-        
-        // Select/Deselect checkboxes
-        var checkbox = $('table tbody input[type="checkbox"]');
-        $("#selectAll").click(function(){
-            if(this.checked){
-                checkbox.each(function(){
-                    this.checked = true;                        
-                });
-            } else{
-                checkbox.each(function(){
-                    this.checked = false;                        
-                });
-            } 
-        });
-        checkbox.click(function(){
-            if(!this.checked){
-                $("#selectAll").prop("checked", false);
-            }
-        });
-    });
+		$('#deleteEmployeeModal').on('show.bs.modal', function (e) {
+			var userId = $(e.relatedTarget).data('id');
+			console.log(userId);
+			var deleteUrl = "/my-tomcat-app/user/delete?id=" + userId;
+            	$('#confirmDeleteBtn').attr('href', deleteUrl);
+			});
+		});
 
-    $(document).ready(function(){
-        $('#deleteEmployeeModal').on('show.bs.modal', function (e) {
-            var userId = $(e.relatedTarget).data('id');
-            console.log(userId);
-            $(this).find('#deleteUserId').val(userId);
-        });
-    });
-
-
-    
+	$(document).ready(function(){
+		$('#viewDetailModal').on('show.bs.modal', function (e) {
+			var userId = $(e.relatedTarget).data('id');
+			$.ajax({
+				url: '/my-tomcat-app/home/detail?id=' + userId,
+				method: 'GET',
+				success: function(response) {
+					$('#detailId').text(response.id);
+					$('#detailName').text(response.name);
+					$('#detailJob').text(response.job_name);
+					$('#detailEmail').text(response.email);
+				},
+				error: function() {
+				}
+			});
+		});
+	});	
+	
 });

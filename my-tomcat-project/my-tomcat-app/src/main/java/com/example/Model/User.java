@@ -1,16 +1,24 @@
 package com.example.Model;
 
+import com.google.protobuf.Timestamp;
+
 public class User {
     private int id;
     private String name;
     private String email;
     private String password;
     private String contact;
-    private boolean gender;
+    private Boolean gender;
     private int job_id;
     private int age;
     private String job_name;
-    private boolean is_delete;
+    private Boolean is_delete;
+    private Timestamp created_at;
+    private String created_by;
+    private Timestamp updated_at;
+    private String updated_by;
+    private Timestamp deleted_at;
+    private String deleted_by;
 
     // Getter và setter cho trường 'id'
     public int getId() {
@@ -58,11 +66,11 @@ public class User {
     }
 
     // Getter và setter cho trường 'gender'
-    public boolean getGender() {
+    public Boolean getGender() {
         return gender;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(Boolean gender) {
         this.gender = gender;
     }
 
@@ -94,11 +102,65 @@ public class User {
     }
 
     // Getter và setter cho trường 'is_delete'
-    public boolean getis_delete() {
+    public Boolean getis_delete() {
         return is_delete;
     }
 
-    public void setis_delete(boolean is_delete) {
+    public void setis_delete(Boolean is_delete) {
         this.is_delete = is_delete;
+    }
+
+    // Getter và setter cho trường 'created_at'
+    public Timestamp getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Timestamp created_at) {
+        this.created_at = created_at;
+    }
+
+    // Getter và setter cho trường 'created_by'
+    public String getCreated_by() {
+        return created_by;
+    }
+
+    public void setCreated_by(String created_by) {
+        this.created_by = created_by;
+    }
+
+    // Getter và setter cho trường 'updated_at'
+    public Timestamp getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(Timestamp updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    // Getter và setter cho trường 'updated_by'
+    public String getUpdated_by() {
+        return updated_by;
+    }
+
+    public void setUpdated_by(String updated_by) {
+        this.updated_by = updated_by;
+    }
+
+    // Getter và setter cho trường 'deleted_at'
+    public Timestamp getDeleted_at() {
+        return deleted_at;
+    }
+
+    public void setDeleted_at(Timestamp deleted_at) {
+        this.deleted_at = deleted_at;
+    }
+
+    // Getter và setter cho trường 'deleted_by'
+    public String getDeleted_by() {
+        return deleted_by;
+    }
+
+    public void setDeleted_by(String deleted_by) {
+        this.deleted_by = deleted_by;
     }
 }
