@@ -176,11 +176,26 @@ public class user extends HttpServlet {
 			}
 			break;
 		case "delete":
-			String idDelete = req.getParameter("userId");
-			deleteUserInfo(resp,Integer.parseInt(idDelete));
-			break;
+			resp.setContentType("text/html;charset=UTF-8");
+	        String userId = req.getParameter("userId");
+
+	        PrintWriter out = resp.getWriter();
+	        out.println("<html><body>");
+	        out.println("<script>");
+	        out.println("var confirmResult = confirm('Are you sure you want to delete this user?');");
+	        out.println("if (confirmResult) {");
+	        out.println("    window.location.href = 'deleteUser?id=" + userId + "';"); 
+	        out.println("}");
+	        out.println("else{");
+	        out.println("    window.location.href = 'user?source=detail&id=" + userId + "';"); 
+	        out.println("}");
+	        out.println("</script>");
+	        out.println("</body></html>");
+	        out.close();
+	        break;
 		case "cancel":
-			resp.sendRedirect("home");
+			id = req.getParameter("userId");
+			resp.sendRedirect("home?id=" + id);
 			break;
 		default:
 			break;

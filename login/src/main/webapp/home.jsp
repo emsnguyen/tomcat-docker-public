@@ -9,9 +9,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	<div class="backgroundBody">
 		<button type="button" id="logo" class="icon-button">
 			<span class="icon-logo"></span>
@@ -38,6 +40,8 @@
 		    String genderValue = (userSearch != null && userSearch.getGender() != null) ? userSearch.getGender() : "";
 		    String emailValue = (userSearch != null && userSearch.getEmail() != null) ? userSearch.getEmail() : "";
 		    String jobValue = (userSearch != null && userSearch.getJob() != null) ? userSearch.getJob() : "";
+		    
+		    String idFromURL = request.getParameter("id");
 		%>
         <form action="home" method="post" class="form-grid">
             <div class="form-column">
@@ -96,45 +100,49 @@
 			       <%= endRecord %> 
 			       of <%= totalRecords %> results</p>
 			<% } %>
-            <table border="1">
-            	<thead>
-	            	<tr>
-	                    <th class="color-th">Name</th>
-	                    <th class="color-th">Age</th>
-	                    <th class="color-th">Gender</th>
-	                    <th class="color-th">Occupation</th>
-	                    <th class="color-th">Email</th>
-	                </tr>
-            	</thead>
-				<tbody>
-				<%
-			        List<User> userList = (List<User>) request.getAttribute("userList");
-			        if (userList != null && !userList.isEmpty()) {
-			            for (User user : userList) {
-				%>
-			                <tr onclick="GoDetail(<%=user.getId()%>)">
-			                    <td><%= user.getName() %></td>
-			                    <td class="text-right"><%= user.getAge() %></td>
-			                    <td><%= user.getGender() %></td>
-			                    <td><%= user.getJob() %></td>
-			                    <td><%= user.getEmail() %></td>
-			                </tr>
-				<%
-			            }
-			        } else {
-				%>
-				            <tr>
-				                <td colspan="6">No data available</td>
-				            </tr>
-				<%
-				    }
-				%>
-
-		        </tbody>
-            </table>
+			<%
+	        List<User> userList = (List<User>) request.getAttribute("userList");
+	        if (userList != null && !userList.isEmpty()) {
+			%>
+	            <table border="1" class="table">
+	            	<thead>
+		            	<tr>
+		                    <th class="color-th">Name</th>
+		                    <th class="color-th">Age</th>
+		                    <th class="color-th">Gender</th>
+		                    <th class="color-th">Occupation</th>
+		                    <th class="color-th">Email</th>
+		                </tr>
+	            	</thead>
+					<tbody>
+					<%
+				            for (User user : userList) {
+					%>
+				                <tr onclick="GoDetail(<%=user.getId()%>)" >
+				                    <td class="<%= (idFromURL!=null &&  idFromURL.equals(String.valueOf(user.getId()))) ? "color-td" : "" %>"><%= user.getName() %></td>
+				                    <td class="<%= (idFromURL!=null &&  idFromURL.equals(String.valueOf(user.getId()))) ? "color-td text-right" : "text-right" %>"><%= user.getAge() %></td>
+				                    <td class="<%= (idFromURL!=null &&  idFromURL.equals(String.valueOf(user.getId()))) ? "color-td" : "" %>"><%= user.getGender() %></td>
+				                    <td class="<%= (idFromURL!=null &&  idFromURL.equals(String.valueOf(user.getId()))) ? "color-td" : "" %>"><%= user.getJob() %></td>
+				                    <td class="<%= (idFromURL!=null &&  idFromURL.equals(String.valueOf(user.getId()))) ? "color-td" : "" %>"><%= user.getEmail() %></td>
+				                </tr>
+			        
+		         	<%
+				    		}
+					%>
+					</tbody>
+	            </table>
+	        <%
+		    } else {
+			%>
+	            <h2 id="no_data"> No data available</h2>
+	            
+			<%
+			}
+			%>
             <br>
             <%
             	int total = (int)request.getAttribute("totalPages");
+            	int currentPage = (int) request.getAttribute("currentPage");
             	if(total>1){
             %>
             <div class="pagination">
@@ -142,8 +150,8 @@
 	                <a href="home?currentPage=<%= (int)request.getAttribute("currentPage") - 1 %>">&lt;</a>
 	            <% } %>
 	            <% for (int i = 1; i <= total; i++) { %>
-	                <a href="home?currentPage=<%= i %>"><%= i %></a>
-	            <% } %>
+	                <a href="home?currentPage=<%= i %>" class="<%= i == currentPage ? "active" : "" %>"><%= i %></a>
+    			<% } %>
 	            <% if ((int)request.getAttribute("currentPage") < (int)request.getAttribute("totalPages")) { %>
 	                <a href="home?currentPage=<%= (int)request.getAttribute("currentPage") + 1 %>">&gt;</a>
 	            <% } %>

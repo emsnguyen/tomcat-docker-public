@@ -54,42 +54,56 @@
 	        <div class="form-row">
 	            <div class="form-column">
 	            	<%
-					    if (!("add".equals(source))) {
+					if (("detail".equals(source)) || ("edit".equals(source))) {
 					%>
-		        	<label for="Id">Id:</label>
-		        	<input type="text" id="userId" name="userId" value="<%=userId%>" readonly style="border: none;">
-		        	<%
-					    }
-		        	%>
-	                <label for="name">Name:</label>
-	                <input type="text" id="name" name="name" value="<%= userInfo==null ? "" : userInfo.getName() %>" placeholder="Enter name" <%= "detail".equals(source) ? "readonly" : "" %>>
-	                <label for="job">Job:</label>
-	                <select id="job" name="job">
-				    <option value="" <%="detail".equals(source) ? "disabled" : "" %>>Select occupation</option>
-						<%
-						    List<Job> occupations = (List<Job>) request.getAttribute("occupations");
-						    String selected = "";
-							if (occupations != null) {
-						        for (Job occupation : occupations) {
-						        	if(userInfo!=null && userInfo.getJob().equals(occupation.getName())){
-						        		selected = "selected";
-						        	}
-						%>
-						<option value="<%= occupation.getIdJob() %>" <%=selected%> <%="detail".equals(source) ? "disabled" : "" %>><%= occupation.getName()  %></option>
-						<%
-						        }
-						    }
-						%>
-					</select>
+			        	<label for="Id">Id:</label>
+			        	<input type="text" id="userId" name="userId" value="<%=userId%>" readonly style="border: none;">
 					<%
-					    if (("add".equals(source))) {
+					} 
 					%>
+	            	<%
+					if (("detail".equals(source))) {
+					%>
+			        	<label for="Name">Name:</label>
+			        	<input type="text" id="name" name="name" value="<%=userInfo==null ? "" : userInfo.getName() %>" readonly style="border: none;">
+			        	<label for="Job">Job:</label>
+			        	<input type="text" id="job" name="job" value="<%=userInfo==null ? "" :userInfo.getJob()%>" readonly style="border: none;">
+			        	<label for="Email">Email:</label>
+			        	<input type="text" id="email" name="email" value="<%=userInfo==null ? "" : userInfo.getEmail()%>" readonly style="border: none;">
+		        	<%
+					} else {
+		        	%>
+		                <label for="name">Name:</label>
+		                <input type="text" id="name" name="name" value="<%= userInfo==null ? "" : userInfo.getName() %>" placeholder="Enter name" <%= "detail".equals(source) ? "readonly" : "" %>>
+		                <label for="job">Job:</label>
+		                <select id="job" name="job">
+					    <option value="" <%="detail".equals(source) ? "disabled" : "" %>>Select occupation</option>
+							<%
+							    List<Job> occupations = (List<Job>) request.getAttribute("occupations");
+							    String selected = "";
+								if (occupations != null) {
+							        for (Job occupation : occupations) {
+							        	if(userInfo!=null && userInfo.getJob().equals(occupation.getName())){
+							        		selected = "selected";
+							        	}
+							%>
+							<option value="<%= occupation.getIdJob() %>" <%=selected%> <%="detail".equals(source) ? "disabled" : "" %>><%= occupation.getName()  %></option>
+							<%
+							        }
+							    }
+							%>
+						</select>
+						<%
+						if (("add".equals(source))) {
+						%>
 				        	<label for="email">Email:</label>
 			                <input type="email" id="email" name="email" value="<%=userInfo==null ? "" : userInfo.getEmail() %>" placeholder="Enter email" <%="detail".equals(source) ? "readonly" : "" %>>
-		        	<%
-					    }
+			        	<%
+						}
+					 }
 		        	%>
 	            </div>
+	            <% if (!("detail".equals(source))) {%>
 	            <div class="form-column">
 	                <label for="age">Age:</label>
 	                <input type="number" id="age" name="age" value="<%=userInfo==null ? "" : userInfo.getAge() %>" placeholder="Age" <%="detail".equals(source) ? "readonly" : "" %>>
@@ -109,6 +123,7 @@
 					    }
 		        	%>
 	            </div>
+	            <%}%>
             </div>
             <div class="form-row">
             <%
@@ -124,6 +139,7 @@
 			%>
 				<button type="submit" id="edit" class="custom-button" name="action" value="edit">Edit</button>
 				<button type="submit" id="delete" class="custom-button" name="action" value="delete">Delete</button>
+				<button type="submit" id="cancel" class="custom-button" name="action" value="cancel">Cancel</button>
 			<% 
 			    }
 			%>

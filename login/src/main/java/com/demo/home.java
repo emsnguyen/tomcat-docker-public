@@ -120,12 +120,12 @@ public class home extends HttpServlet {
                 sqlCount.append(" AND user_info.name LIKE ? ");
             }
             if (ageForm > 0) {
-                sql.append(" AND user_info.age > ? ");
-                sqlCount.append(" AND user_info.age > ? ");
+                sql.append(" AND user_info.age >= ?  ");
+                sqlCount.append(" AND user_info.age >= ? ");
             }
             if (ageTo > 0) {
-                sql.append(" AND user_info.age < ? ");
-                sqlCount.append(" AND user_info.age < ? ");
+                sql.append(" AND user_info.age <= ? ");
+                sqlCount.append(" AND user_info.age <= ? ");
             }
             if (!gender.isEmpty()) {
                 sql.append(" AND user_info.gender = ? ");
