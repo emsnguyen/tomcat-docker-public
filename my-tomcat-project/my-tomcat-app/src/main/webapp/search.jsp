@@ -83,94 +83,16 @@
 							<div class="col-sm-6">
 								<h2>User <b>Search</b></h2>
 							</div>
-							<%-- <div class="col-sm-6">
-								<a href="/my-tomcat-app/user" class="btn btn-success" ><i class="material-icons">&#xE147;</i> <span>Add New Employee</span></a>
-								<a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>						
-							</div> --%>
 						</div>
 					</div>
-						<div class="s009">
-							<form action="/my-tomcat-app/home/search" method="post" onsubmit="showLoading()">
-								<div class="inner-form">
-								<div class="advance-search">
-									<div class="row">
-									<div class="col-6">
-										<div class="input-field">
-										<div class="col-2">
-											<label>Name</label>
-										</div>
-										<input type="text" name="name" id="name" placeholder="name" value="${param.name}" />
-										</div>
-									</div>
-									<div class="col-6">
-										<div class="input-field">
-										<div class="col-2">
-											<label>Gender</label>
-										</div>
-										<label><input type="radio" name="gender" value="1" ${param.gender == '1' ? 'checked' : ''}> Male</label>
-										<label><input type="radio" name="gender" value="0" ${param.gender == '0' ? 'checked' : ''}> Female</label>
-										</div>
-									</div>
-									</div>
-									<div class="row second">
-									<div class="col-6">
-										<div class="input-field">
-										<div class="col-2">
-											<label>Job</label>
-										</div>
-										<div class="input-select">
-											<select class="form-control" name="job_id">
-											<option value="">Select job</option>
-											<c:forEach var="job" items="${listJob}">
-												<option value="${job.id}" ${param.job_id == job.id ? 'selected' : ''}>${job.name}</option>
-											</c:forEach>
-											</select>
-										</div>
-										</div>
-									</div>
-									<div class="col-6">
-										<div class="input-field">
-										<div class="col-2">
-											<label>Age</label>
-										</div>
-										<input type="number" name="minAge" id="minAge" placeholder="0" value="${param.minAge}" />
-										~ 
-										<input type="number" name="maxAge" id="maxAge" placeholder="0" value="${param.maxAge}" />
-										</div>
-									</div>
-									</div>
-									<div class="row third">
-										<div class="col-12">
-										<div class="input-field">
-											<div class="col-1">
-											<label>Email</label>
-											</div>
-											<input type="text" name="email" id="email" placeholder="email" value="${param.email}" />
-										</div>
-										</div>
-									</div>
-									<div class="row">
-									<div class="d-flex justify-content-end">
-										<div class="group-btn">
-										<button type="button" class="btn-delete" onclick="resetForm()">RESET</button>
-										<button type="submit" class="btn-search">SEARCH</button>
-										</div>
-									</div>
-									</div>
-
-									<c:if test="${searchResult != null}">
-										<div class="row">
-											<div class="d-flex justify-content-end">
-												<div class="hint-text">Showing <b>${pageSize}</b> out of <b>${totalUsers}</b> entries</div>
-											</div>
-										</div>
-									</c:if>
-								</div>
-								</div>
-							</form>
-						</div>
+						<%@ include file="../component/searchbar.jsp"%>
 						<c:choose>
 							<c:when test="${not empty searchResult}">
+								<div class="row">
+									<div class="d-flex justify-content-end">
+										<div class="hint-text">Showing <b>${endRecord}</b> of <b>${totalUsers}</b> entries</div>
+									</div>
+								</div>
 								<table class="table table-hover">
 									<thead>
 										<tr>
@@ -183,7 +105,7 @@
 									</thead>
 									<tbody>
 										<c:forEach var="user" items="${searchResult}">
-											<tr>
+											<tr data-id="${user.id}">
 												<td>${user.name}</td>
 												<td>${user.age}</td>
 												<td>${user.gender ? 'Male' : 'Female'}</td>
@@ -200,80 +122,99 @@
 								</div>
 							</c:otherwise>
 						</c:choose>
-					<div class="row">
-						<div class="col-sm-6">
-							<a href="/my-tomcat-app/user" class="btn btn-success" ><span>Add User</span></a>
-						</div>
-						<c:if test="${searchResult != null}">
-							<div class="col-sm-6">
-								<ul class="pagination">
-									<!-- Hiển thị liên kết "Previous" -->
-									<li class="page-item <c:if test="${pageNumber == 1}">disabled</c:if>">
-										<a class="page-link" href="/my-tomcat-app/home?page=${pageNumber - 1}">Previous</a>
-									</li>
+					<div class="d-flex justify-content-end">
+					<c:if test="${listUser != null  }">
+						<ul class="pagination">
+							<!-- Hiá»n thá» liÃªn káº¿t "Previous" -->
+							<li
+								class="page-item <c:if test="${pageNumber == 1}">disabled</c:if>">
+								<a class="page-link"
+								href="/my-tomcat-app/home?page=${pageNumber - 1}">Previous</a>
+							</li>
 
-									<!-- Hiển thị các liên kết trang -->
-									<c:forEach var="page" begin="1" end="${totalPages}">
-										<li class="page-item <c:if test="${pageNumber == page}">active</c:if>">
-											<a class="page-link" href="/my-tomcat-app/home?page=${page}">${page}</a>
-										</li>
-									</c:forEach>
+							<!-- Hiá»n thá» cÃ¡c liÃªn káº¿t trang -->
+							<c:forEach var="page" begin="1" end="${totalPages}">
+								<li
+									class="page-item <c:if test="${pageNumber == page}">active</c:if>">
+									<a class="page-link" href="/my-tomcat-app/home?page=${page}">${page}</a>
+								</li>
+							</c:forEach>
 
-									<!-- Hiển thị liên kết "Next" -->
-									<li class="page-item <c:if test="${pageNumber == totalPages}">disabled</c:if>">
-										<a class="page-link" href="/my-tomcat-app/home?page=${pageNumber + 1}">Next</a>
-									</li>
-								</ul>
-							</div>
-						</c:if>
-					</div>
+							<!-- Hiá»n thá» liÃªn káº¿t "Next" -->
+							<li
+								class="page-item <c:if test="${pageNumber == totalPages}">disabled</c:if>">
+								<a class="page-link"
+								href="/my-tomcat-app/home?page=${pageNumber + 1}">Next</a>
+							</li>
+						</ul>
+					</c:if>
 				</div>
-			</div>        
+
+		
 		</div>
-		<!-- View Detail Modal HTML -->
-		<div id="viewDetailModal" class="modal fade">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">						
-						<h4 class="modal-title">User Detail</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<div class="table-wrapper-add">
+			<div class="row">
+					<div class="d-flex justify-content-start">
+						<a href="/my-tomcat-app/user" class="btn btn-success"><span>Add
+								User</span></a>
 					</div>
-					<div class="modal-body">
-						<!-- Thêm các trường dữ liệu để hiển thị chi tiết của người dùng -->
-						<p>Name: <span id="detailName"></span></p>
-						<p>Age: <span id="detailAge"></span></p>
-						<p>Gender: <span id="detailGender"></span></p>
-						<p>Email: <span id="detailEmail"></span></p>
-						<p>Job: <span id="detailJob"></span></p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					</div>
-				</div>
 			</div>
 		</div>
+	</div>
+</div>
 
-			<!-- Delete Modal HTML -->
-			<div id="deleteEmployeeModal" class="modal fade">
-				<div class="modal-dialog">
-					<div class="modal-content">
-							<div class="modal-header">						
-								<h4 class="modal-title">Delete Employee</h4>
-								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							</div>
-							<div class="modal-body">					
-								<p>Are you sure you want to delete these Records?</p>
-								<p class="text-warning"><small>This action cannot be undone.</small></p>
-							</div>
-							<div class="modal-footer">
-								<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-								<a href="#" id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
-							</div>
-					</div>
-				</div>
-			</div>
-			
-	
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var rows = document.querySelectorAll('tbody tr');
+        // Kiểm tra xem đã lưu trạng thái dòng được chọn trong sessionStorage chưa
+        var selectedRows = sessionStorage.getItem('selectedRows');
+        if (selectedRows) {
+            selectedRows = JSON.parse(selectedRows);
+            selectedRows.forEach(function(rowId) {
+                var selectedRow = document.querySelector('tr[data-id="' + rowId + '"]');
+                if (selectedRow) {
+                    selectedRow.classList.add('selected');
+                }
+            });
+        }
+        // Bắt sự kiện double click trên dòng
+        rows.forEach(function(row) {
+            row.addEventListener('dblclick', function() {
+                var userId = this.getAttribute('data-id');
+                window.location.href = '/my-tomcat-app/user/detail?id=' + userId;
+                // Lấy danh sách dòng đã được chọn từ sessionStorage
+                var selectedRows = sessionStorage.getItem('selectedRows');
+                if (!selectedRows) {
+                    selectedRows = [];
+                } else {
+                    selectedRows = JSON.parse(selectedRows);
+                }
+                // Kiểm tra xem dòng đã được chọn chưa
+                var index = selectedRows.indexOf(userId);
+                if (index === -1) {
+                    // Nếu chưa được chọn, thêm vào danh sách
+                    selectedRows.push(userId);
+                } else {
+                    // Nếu đã được chọn, loại bỏ khỏi danh sách
+                    selectedRows.splice(index, 1);
+                }
+                // Lưu danh sách các dòng đã được chọn vào sessionStorage
+                sessionStorage.setItem('selectedRows', JSON.stringify(selectedRows));
+                // Loại bỏ lựa chọn trước đó và thêm lựa chọn mới
+                rows.forEach(function(r) {
+                    r.classList.remove('selected');
+                });
+                selectedRows.forEach(function(rowId) {
+                    var selectedRow = document.querySelector('tr[data-id="' + rowId + '"]');
+                    if (selectedRow) {
+                        selectedRow.classList.add('selected');
+                    }
+                });
+            });
+        });
+    });
+</script>
+
 <!-- Footer-->
         <!-- Bootstrap core JS-->
 		<script

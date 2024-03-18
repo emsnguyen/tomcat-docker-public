@@ -24,8 +24,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 <!-- Core theme CSS (includes Bootstrap)-->
-<link href="../resources/css/index-styles.css" rel="stylesheet" />
-
+<link href="resources/css/index-styles.css" rel="stylesheet" />
+<c:if test="${userExist != null}">
+	<link href="../resources/css/index-styles.css" rel="stylesheet" />
+</c:if>
 </head>
 	<body id="page-top">
 		<%
@@ -41,6 +43,9 @@
 				<div class="logo">
 					<c:if test="${userExist != null}">
 						<img src="../resources/images/VHEC_logo.png" alt="logo">
+					</c:if>
+					<c:if test="${userExist == null}">
+						<img src="resources/images/VHEC_logo.png" alt="logo">
 					</c:if>
 				</div>
 			</header>
@@ -70,7 +75,8 @@
 					<form >
 						<div class="modal-header">		
 							<h4 class="modal-title">User Details</h4>
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							
+							<a href="/my-tomcat-app/home" class="close">&times;</a>
 						</div>
 
 						<div class="modal-body">
@@ -96,16 +102,15 @@
 				<div class="modal-dialog">
 					<div class="modal-content">
 							<div class="modal-header">						
-								<h4 class="modal-title">Delete Employee</h4>
+								<h4 class="modal-title">Delete User</h4>
 								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 							</div>
 							<div class="modal-body">					
 								<p>Are you sure you want to delete these Records?</p>
 								<p class="text-warning"><small>This action cannot be undone.</small></p>
 							</div>
-							<div class="modal-footer">
-								<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-								<a href="#" id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
+							<div class="modal-footer">							
+								<a href="/my-tomcat-app/user/delete?id=<c:out value='${userExist.id}' />" class="btn btn-danger" >Delete</a>
 							</div>
 					</div>
 				</div>

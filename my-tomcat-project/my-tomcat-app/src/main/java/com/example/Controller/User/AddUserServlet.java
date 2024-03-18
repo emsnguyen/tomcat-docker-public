@@ -121,6 +121,7 @@ public class AddUserServlet extends HttpServlet {
             throws SQLException, IOException, ServletException {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("email") != null) {
+        	request.setCharacterEncoding("UTF-8");
             String currentUser = (String) session.getAttribute("email");
             String name = request.getParameter("name");
             String email = request.getParameter("email");
@@ -151,7 +152,7 @@ public class AddUserServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("email") != null) {
             String currentUser = (String) session.getAttribute("email");
-
+            request.setCharacterEncoding("UTF-8");
             int userId = Integer.parseInt(request.getParameter("id"));
             String name = request.getParameter("name");
             String email = request.getParameter("email");

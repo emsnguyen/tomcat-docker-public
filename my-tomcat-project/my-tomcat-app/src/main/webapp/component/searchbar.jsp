@@ -16,8 +16,8 @@
                                             <div class="col-2">
                                                 <label>Gender</label>
                                             </div>
-                                            <label><input type="radio" name="gender" value="1" ${param.gender == '1' ? 'checked' : ''}> Male</label>
-                                            <label><input type="radio" name="gender" value="0" ${param.gender == '0' ? 'checked' : ''}> Female</label>
+                                            <label class="gender-label" ><input type="radio" name="gender" value="1" ${param.gender == '1' ? 'checked' : ''}> Male</label>
+                                            <label class="gender-label"><input type="radio" name="gender" value="0" ${param.gender == '0' ? 'checked' : ''}> Female</label>
                                             </div>
                                         </div>
                                         </div>
@@ -43,7 +43,7 @@
                                                 <label>Age</label>
                                             </div>
                                             <input type="number" name="minAge" id="minAge" value="${param.minAge}" maxlength="3" />
-                                            ~ 
+                                            <label class = "age-label">~</label>
                                             <input type="number" name="maxAge" id="maxAge" value="${param.maxAge}" maxlength="3"/>
                                             </div>
                                         </div>
@@ -61,7 +61,6 @@
                                         <div class="row">
                                         <div class="d-flex justify-content-end">
                                             <div class="group-btn">
-                                            <button type="button" class="btn-delete" onclick="resetForm()">RESET</button>
                                             <button type="submit" class="btn-search">SEARCH</button>
                                             </div>
                                         </div>
@@ -70,14 +69,3 @@
 								</div>
 							</form>
 						</div>
-
-<script>
-    function resetForm() {
-		document.getElementById("name").value = "";
-		document.getElementById("minAge").value = "";
-		document.getElementById("maxAge").value = "";
-		document.querySelector('input[name="gender"]:checked').checked = false;
-		document.getElementById("email").value = "";
-		document.querySelector('job_id').value = ""; 
-	}
-</script>

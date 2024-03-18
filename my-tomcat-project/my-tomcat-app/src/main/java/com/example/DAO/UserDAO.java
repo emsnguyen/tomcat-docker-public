@@ -17,7 +17,7 @@ public class UserDAO {
 
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE is_delete = false ORDER BY id DESC";
+        String query = "SELECT * FROM user WHERE is_delete = 0 ORDER BY id DESC";
         try (PreparedStatement ps = con.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -38,7 +38,7 @@ public class UserDAO {
 
     public List<User> Pagination(int pageNumber, int pageSize) throws SQLException {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE is_delete = false ORDER BY id DESC LIMIT ? OFFSET ?";
+		String query = "SELECT * FROM user WHERE is_delete = 0 ORDER BY id DESC LIMIT ? OFFSET ?";
         int offset = (pageNumber - 1) * pageSize;
         try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, pageSize);
@@ -188,7 +188,7 @@ public class UserDAO {
     public void deleteUser(int userId) throws SQLException {
         String query = "UPDATE user SET is_delete = ? WHERE id = ?";
         try (PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setBoolean(1, true);
+            ps.setInt(1, 1);
             ps.setInt(2, userId); // UserID for update
             ps.executeUpdate();
         }

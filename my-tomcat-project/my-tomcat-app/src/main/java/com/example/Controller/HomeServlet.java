@@ -106,13 +106,16 @@ public class HomeServlet extends HttpServlet {
         // Tính toán tổng số trang
         int totalUsers = userDao.getAllUsers().size();
         int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
-
+        int startRecord = (pageNumber - 1) * pageSize + 1;
+        int endRecord = Math.min(pageNumber * pageSize, totalUsers);
         request.setAttribute("listUser", listUser);
         request.setAttribute("listJob", listJob);
         request.setAttribute("pageNumber", pageNumber);
         request.setAttribute("pageSize", pageSize);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalUsers", totalUsers);
+        request.setAttribute("startRecord", startRecord);
+        request.setAttribute("endRecord", endRecord);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/home.jsp");
         dispatcher.forward(request, response);
     }
@@ -185,9 +188,11 @@ public class HomeServlet extends HttpServlet {
         }
 
         request.setAttribute("pageSize", pageSize);
-
+        
         int totalUsers = userDao.getAllUsers().size();
+        int endRecord = searchResult.size();
         request.setAttribute("totalUsers", totalUsers);
+        request.setAttribute("endRecord", endRecord); 
         request.setAttribute("listJob", listJob);
         request.setAttribute("searchResult", searchResult);
         request.getRequestDispatcher("/search.jsp").forward(request, response);

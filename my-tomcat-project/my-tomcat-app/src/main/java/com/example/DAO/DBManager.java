@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBManager {
-    private static final String URL = "jdbc:mysql://mysql_db:3306/tomcatdb?characterEncoding=UTF-8";
-    private static final String USERNAME = "tomcat";
-    private static final String PASSWORD = "password";
+    private static final String URL = "jdbc:mysql://localhost:3306/tomcatdb?characterEncoding=UTF-8";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "1234";
     private static Connection connection = null;
 
     private DBManager() {
