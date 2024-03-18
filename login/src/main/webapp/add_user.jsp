@@ -56,7 +56,7 @@
 	            	<%
 					if (("detail".equals(source)) || ("edit".equals(source))) {
 					%>
-			        	<label for="Id">Id:</label>
+			        	<label id="lb_id">Id:</label>
 			        	<input type="text" id="userId" name="userId" value="<%=userId%>" readonly style="border: none;">
 					<%
 					} 
@@ -64,11 +64,11 @@
 	            	<%
 					if (("detail".equals(source))) {
 					%>
-			        	<label for="Name">Name:</label>
+			        	<label for="Name" id="lb_name" >Name:</label>
 			        	<input type="text" id="name" name="name" value="<%=userInfo==null ? "" : userInfo.getName() %>" readonly style="border: none;">
-			        	<label for="Job">Job:</label>
+			        	<label for="Job" id="lb_job">Job:</label>
 			        	<input type="text" id="job" name="job" value="<%=userInfo==null ? "" :userInfo.getJob()%>" readonly style="border: none;">
-			        	<label for="Email">Email:</label>
+			        	<label for="Email" id="lb_email">Email:</label>
 			        	<input type="text" id="email" name="email" value="<%=userInfo==null ? "" : userInfo.getEmail()%>" readonly style="border: none;">
 		        	<%
 					} else {

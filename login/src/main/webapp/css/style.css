@@ -514,6 +514,11 @@ label.valid {
   margin-left: 110px;
   margin-right: 20px;
   margin-top: 10px; }
+  
+input {
+    border-radius: 5px;
+    border: 1px solid;
+}
 
 @media screen and (max-width: 1200px) {
   .container {

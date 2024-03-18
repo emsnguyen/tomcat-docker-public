@@ -245,4 +245,8 @@ h2#no_data {
     text-align: center;
 }
 
+label#lb_job {
+    margin-right: 20px;
+}
+
 ;

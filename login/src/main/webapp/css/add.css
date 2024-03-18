@@ -22,4 +22,9 @@ input#age{
     display: block;
     margin-bottom: 20px;
 }
+
+.label#lb_id,#lb_name,#lb_job,#lb_email{
+	font-weight: bold;
+}
+
 ;

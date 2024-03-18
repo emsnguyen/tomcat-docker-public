@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>Sign Up Form by Colorlib</title>
-
-<!-- Font Icon -->
-<link rel="stylesheet"
-	href="fonts/material-icon/css/material-design-iconic-font.min.css">
-
-<!-- Main css -->
-<link rel="stylesheet" href="css/style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Sign Up Form by Colorlib</title>
+	
+	<link rel="stylesheet"
+		href="fonts/material-icon/css/material-design-iconic-font.min.css">
+	
+	<link rel="stylesheet" href="css/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" type="text/javascript"></script>
+	<script src="js/validation.js" type="text/javascript"></script>
+    <style>
+	label.error{
+		color: red;
+	}
+    </style>
 </head>
 <body>
 
@@ -27,27 +33,24 @@
 						<form action="register" method="post" class="register-form"
 							id="register-form">
 							<div class="form-group">
-								<label for="name"><i
-									class="zmdi zmdi-account material-icons-name"></i></label> <input
+							<input
 									type="text" name="name" id="name" placeholder="Your Name" />
 							</div>
 							<div class="form-group">
-								<label for="email"><i class="zmdi zmdi-email"></i></label> <input
-									type="email" name="username" id="username" placeholder="Your Email" />
+							<input
+									type="text" name="username" id="username" placeholder="User name" />
 							</div>
 							<div class="form-group">
-								<label for="pass"><i class="zmdi zmdi-lock"></i></label> <input
+							<input
 									type="password" name="password" id="password" placeholder="Password" />
 							</div>
 							<div class="form-group">
-								<label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
 								<input type="password" name="re_pass" id="re_pass"
 									placeholder="Repeat your password" />
 							</div>
 							<div class="form-group">
-								<label for="contact"><i class="zmdi zmdi-lock-outline"></i></label>
 								<input type="text" name="contact" id="contact"
-									placeholder="Contact no" />
+									placeholder="Email" />
 							</div>
 							<div class="form-group">
 								<input type="checkbox" name="agree-term" id="agree-term"
