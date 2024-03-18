@@ -178,7 +178,8 @@ function add_user() {
 }
 
 function GoDetail(userId) {
-    window.location.href = "user?source=detail&id="+userId;
+	<%int currentPages = (int) request.getAttribute("currentPage");%>
+    window.location.href = "user?source=detail&id="+userId+"&page="+<%=currentPages%>;
 }
 </script>
 </html>

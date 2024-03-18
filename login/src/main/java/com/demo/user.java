@@ -18,11 +18,13 @@ import com.demo.models.Job;
 import com.demo.models.User;
 @WebServlet("/user")
 public class user extends HttpServlet {
+	String page;
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //    	HttpSession session = request.getSession(false);
 //    	if (session != null && session.getAttribute("username") != null) {
     	String action = req.getParameter("source");
     	String id = req.getParameter("id");
+    	page = req.getParameter("page");
     	User user = getUserInfo(id);
     	if (action!=null) {
     	switch (action) {
@@ -195,7 +197,7 @@ public class user extends HttpServlet {
 	        break;
 		case "cancel":
 			id = req.getParameter("userId");
-			resp.sendRedirect("home?id=" + id);
+			resp.sendRedirect("home?currentPage="+page+"&id=" + id);
 			break;
 		default:
 			break;
