@@ -11,7 +11,7 @@ public class User {
     private Boolean gender;
     private int job_id;
     private int age;
-    private String job_name;
+    private String Job_name;
     private Boolean is_delete;
     private Timestamp created_at;
     private String created_by;
@@ -37,7 +37,15 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+    
+    // Getter và setter cho trường 'Job_name'
+    public String getJob_name() {
+        return Job_name;
+    }
 
+    public void setJob_name(String Job_name) {
+        this.Job_name = Job_name;
+    }
     // Getter và setter cho trường 'email'
     public String getEmail() {
         return email;
@@ -92,14 +100,6 @@ public class User {
         this.age = age;
     }
 
-    // Getter và setter cho trường 'job_name'
-    public String getJob_name() {
-        return job_name;
-    }
-
-    public void setJob_name(String job_name) {
-        this.job_name = job_name;
-    }
 
     // Getter và setter cho trường 'is_delete'
     public Boolean getis_delete() {

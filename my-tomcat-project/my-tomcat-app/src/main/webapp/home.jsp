@@ -23,7 +23,8 @@
 				<div class="row">
 					<div class="d-flex justify-content-end">
 						<div class="hint-text">
-							  Showing <b>${startRecord}-${endRecord}</b> of <b>${totalUsers}</b> entries
+							Showing <b>${startRecord}-${endRecord}</b> of <b>${totalUsers}</b>
+							entries
 						</div>
 					</div>
 				</div>
@@ -42,7 +43,7 @@
 					<c:forEach var="user" items="${listUser}">
 						<tr data-id="${user.id}">
 							<td>${user.name}</td>
-							<td class = "
+							<td class="
 							age">${user.age}</td>
 							<td>${user.gender ? 'Male' : 'Female'}</td>
 							<td>${user.job_name}</td>
@@ -52,41 +53,41 @@
 				</tbody>
 			</table>
 			<div class="d-flex justify-content-end">
-					<c:if test="${listUser != null  }">
-						<ul class="pagination">
-							<!-- Hiá»n thá» liÃªn káº¿t "Previous" -->
+				<c:if test="${listUser != null  }">
+					<ul class="pagination">
+						<!-- Hiá»n thá» liÃªn káº¿t "Previous" -->
+						<li
+							class="page-item <c:if test="${pageNumber == 1}">disabled</c:if>">
+							<a class="page-link"
+							href="/my-tomcat-app/home?page=${pageNumber - 1}">Previous</a>
+						</li>
+
+						<!-- Hiá»n thá» cÃ¡c liÃªn káº¿t trang -->
+						<c:forEach var="page" begin="1" end="${totalPages}">
 							<li
-								class="page-item <c:if test="${pageNumber == 1}">disabled</c:if>">
-								<a class="page-link"
-								href="/my-tomcat-app/home?page=${pageNumber - 1}">Previous</a>
+								class="page-item <c:if test="${pageNumber == page}">active</c:if>">
+								<a class="page-link" href="/my-tomcat-app/home?page=${page}">${page}</a>
 							</li>
+						</c:forEach>
 
-							<!-- Hiá»n thá» cÃ¡c liÃªn káº¿t trang -->
-							<c:forEach var="page" begin="1" end="${totalPages}">
-								<li
-									class="page-item <c:if test="${pageNumber == page}">active</c:if>">
-									<a class="page-link" href="/my-tomcat-app/home?page=${page}">${page}</a>
-								</li>
-							</c:forEach>
+						<!-- Hiá»n thá» liÃªn káº¿t "Next" -->
+						<li
+							class="page-item <c:if test="${pageNumber == totalPages}">disabled</c:if>">
+							<a class="page-link"
+							href="/my-tomcat-app/home?page=${pageNumber + 1}">Next</a>
+						</li>
+					</ul>
+				</c:if>
+			</div>
 
-							<!-- Hiá»n thá» liÃªn káº¿t "Next" -->
-							<li
-								class="page-item <c:if test="${pageNumber == totalPages}">disabled</c:if>">
-								<a class="page-link"
-								href="/my-tomcat-app/home?page=${pageNumber + 1}">Next</a>
-							</li>
-						</ul>
-					</c:if>
-				</div>
 
-		
 		</div>
 		<div class="table-wrapper-add">
 			<div class="row">
-					<div class="d-flex justify-content-start">
-						<a href="/my-tomcat-app/user" class="btn btn-success"><span>Add
-								User</span></a>
-					</div>
+				<div class="d-flex justify-content-start">
+					<a href="/my-tomcat-app/user" class="btn btn-success"><span>Add
+							User</span></a>
+				</div>
 			</div>
 		</div>
 	</div>

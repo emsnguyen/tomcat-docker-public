@@ -9,14 +9,13 @@
 <!-- Font Icon -->
 <link rel="stylesheet"
 	href="./resources/fonts/material-icon/css/material-design-iconic-font.min.css">
-
 <!-- Main css -->
-<link rel="stylesheet" href="./resources/css/style.css">
+<link rel="stylesheet" href="/my-tomcat-app/resources/css/style.css">
 </head>
 <body>
 	<header>
 		<div class="logo">
-			<img src="./resources/images/VHEC_logo.png" alt="logo">
+			<img src="/my-tomcat-app/resources/images/VHEC_logo.png" alt="logo">
 		</div>
 	</header>
 	<div class="main">
@@ -26,7 +25,8 @@
 				<div class="signin-content">
 					<div class="signin-image">
 						<figure>
-							<img src="./resources/images/signin-image.jpg" alt="sing up image">
+							<img src="./resources/images/signin-image.jpg"
+								alt="sing up image">
 						</figure>
 						<a href="register.jsp" class="signup-image-link">Create an
 							account ?</a>
@@ -37,16 +37,17 @@
 						<form method="post" action="loginServlet" class="register-form"
 							id="login-form" onsubmit="return validateForm()">
 							<div class="form-group">
-								<input
-									type="text" name="email" id="email"
-									placeholder="Your Email" />
+								<input type="text" name="email" id="email"
+									placeholder="Your Email" /> <span id="email-error"
+									class="error-message"></span>
 							</div>
 							<div class="form-group">
-								<input
-									type="password" name="password" id="password"
-									placeholder="Password" />
+								<input type="password" name="password" id="password"
+									placeholder="Password" /> <span id="password-error"
+									class="error-message"></span>
 							</div>
-							<span id="email-error" class="error-message"></span>
+							 <span id="not-found-error"
+									class="error-message"></span>
 							<div class="form-group form-button">
 								<input type="submit" name="signin" id="signin"
 									class="form-submit" value="Log in" />
@@ -57,24 +58,13 @@
 			</div>
 		</section>
 	</div>
-	<!-- JS -->
-	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="./resources/js/main.js"></script>
-
-	<script>
-		function validateForm() {
-			var email = document.getElementById('email').value;
-			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailRegex.test(email)) {
-				document.getElementById('email-error').innerHTML = "Invalid email address";
-				return false;
-			} else {
-				document.getElementById('email-error').innerHTML = "";
-				return true;
-			}
-		}
-	</script>
-
 </body>
+<!-- JS -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script src="/my-tomcat-app/resources/js/validate-config.js"></script>
+<script src="/my-tomcat-app/resources/js/main.js"></script>
 <!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

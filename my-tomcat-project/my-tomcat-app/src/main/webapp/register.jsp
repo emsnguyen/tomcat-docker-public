@@ -28,10 +28,12 @@
 						<h2 class="form-title">Signup</h2>
 					
 						<form method="post" action="registerServlet" class="register-form"
-							id="register-form" onsubmit="return validateForm()">
+							id="register-form" >
 							<div class="form-group">
-								 <input
+								<input
 									type="text" name="name" id="name" placeholder="Your Name" />
+								<span id="name-error" class="error-message"></span>
+								<span id="exists-error" class="error-message"></span>
 							</div>
 							<div class="form-group">
 								<input type="text" name="contact" id="contact"
@@ -70,35 +72,12 @@
 
 
 	</div>
+
 	<!-- JS -->
 	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="./resources/js/main.js"></script>
-
-	<script>
-		function validateForm() {
-			var email = document.getElementById('email').value;
-			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailRegex.test(email)) {
-				document.getElementById('email-error').innerHTML = "Invalid email address";
-				return false;
-			} else {
-				document.getElementById('email-error').innerHTML = "";
-			}
-
-			var pass = document.getElementById('pass').value;
-			var re_pass = document.getElementById('re_pass').value;
-			if (pass !== re_pass) {
-				document.getElementById('pass-error').innerHTML = "Passwords do not match";
-				return false;
-			} else {
-				document.getElementById('pass-error').innerHTML = "";
-			}
-
-			return true;
-		}
-	</script>
-
-
-
+	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+	<script src="/my-tomcat-app/resources/js/validate-config.js"></script>
+	<script src="/my-tomcat-app/resources/js/main.js"></script>
 </body>
 </html>

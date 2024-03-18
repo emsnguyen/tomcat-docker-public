@@ -4,7 +4,7 @@
 			id="mainNav">
 			<header>
 				<div class="logo">
-					<img src="./resources/images/VHEC_logo.png" alt="logo">
+					<img src="/my-tomcat-app/resources/images/VHEC_logo.png" alt="logo">
 				</div>
 			</header>
 			<div class="container">

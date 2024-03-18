@@ -565,3 +565,6 @@ label.valid {
     margin-bottom: 25px;
 }
 
+.error-message {
+    color: red;
+}

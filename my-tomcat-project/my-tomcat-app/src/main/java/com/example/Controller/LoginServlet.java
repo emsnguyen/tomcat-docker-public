@@ -18,43 +18,53 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/loginServlet")
 public class LoginServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public LoginServlet() {
-        super();
-    }
+	public LoginServlet() {
+		super();
+	}
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
 
-        try {
-            Connection con = DBManager.getConnection();
-            if (con != null) {
-                PreparedStatement ps = con.prepareStatement("SELECT * FROM user WHERE email = ? AND password = ?");
+		try {
+			Connection con = DBManager.getConnection();
+			if (con != null) {
+				PreparedStatement ps = con.prepareStatement("SELECT * FROM user WHERE email = ? AND password = ?");
 
-                ps.setString(1, email);
-                ps.setString(2, password);
-                ResultSet rs = ps.executeQuery();
+				ps.setString(1, email);
+				ps.setString(2, password);
+				ResultSet rs = ps.executeQuery();
 
-                if (rs.next()) {
-                    System.out.println("Login successfully.");
+				if (rs.next()) {
+					String dbEmail = rs.getString("email");
+					String dbPassword = rs.getString("password");
 
-                    HttpSession httpSession = request.getSession();
-                    httpSession.setAttribute("email", email);
-                    response.sendRedirect("/my-tomcat-app/home");
-                } else {
-                    System.out.println("Login failed: User not found.");
-                    response.sendRedirect("error.jsp");
-                }
-            } else {
-                System.out.println("Connection failed");
-                response.sendRedirect("error.jsp");
-            }
-        } catch (SQLException se) {
-            se.printStackTrace();
-        }
-    }
+					if (email.equals(dbEmail) && password.equals(dbPassword)) {
+						System.out.println("Login successfully.");
+
+						HttpSession httpSession = request.getSession();
+						httpSession.setAttribute("email", email);
+						response.sendRedirect("/my-tomcat-app/home");
+					} else {
+						System.out.println("Login failed: Username or password does not match.");
+						response.getWriter().write("notfound");
+						return;
+					}
+				} else {
+					System.out.println("Login failed: Username or password does not match.");
+					response.getWriter().write("notfound");
+					return;
+				}
+			} else {
+				System.out.println("Connection failed");
+				response.sendRedirect("error.jsp");
+			}
+		} catch (SQLException se) {
+			se.printStackTrace();
+		}
+	}
 }
