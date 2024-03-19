@@ -20,11 +20,20 @@ input#age{
 .form-column input,
 .form-column select {
     display: block;
-    margin-bottom: 20px;
 }
 
-.label#lb_id,#lb_name,#lb_job,#lb_email{
+label {
+    margin: 20px;
+}
+
+label.error {
+    margin: 0px 20px;
+}
+
+.label, #lb_id,#lb_name,#lb_job,#lb_email{
 	font-weight: bold;
 }
+
+
 
 ;

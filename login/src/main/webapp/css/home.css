@@ -178,7 +178,7 @@ button#insert_user{
 }
 
 .gender-radio {
-    margin: 20px 0px;
+    margin: 5px 0px;
 }
 
 .fullWidth{
@@ -248,5 +248,11 @@ h2#no_data {
 label#lb_job {
     margin-right: 20px;
 }
+
+label.error{
+		margin-top:10px;
+		font-size: 10px;
+		color: red;
+	}
 
 ;

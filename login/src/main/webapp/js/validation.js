@@ -1,8 +1,5 @@
 $().ready(function() {
 	$("#register-form").validate({
-		onfocusout: false,
-		onkeyup: false,
-		onclick: false,
 		rules: {
 			"username": {
 				required: true,
@@ -37,6 +34,35 @@ $().ready(function() {
 				required: "Please enter your name.",
 			},
 			"contact": {
+				required: "Please enter your email.",
+				email: "Please enter a valid email address."
+			},
+		}
+	});
+});
+
+$().ready(function() {
+	$("#userForm").validate({
+		rules: {
+			"name": {
+				required: true,
+			},
+			"job": {
+				required: true,
+			},
+			"email": {
+				required: true,
+				email: true
+			},
+		},
+		messages: {
+			"name": {
+				required: "Please enter your name.",
+			},
+			"job": {
+				required: "Please enter your job.",
+			},
+			"email": {
 				required: "Please enter your email.",
 				email: "Please enter a valid email address."
 			},

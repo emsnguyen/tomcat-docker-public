@@ -16,7 +16,9 @@
 <body>
 
 	<div class="main">
-
+		<%
+			int login = request.getAttribute("login") == null ? 0 : (int) request.getAttribute("login");
+		%>
 		<!-- Sing in  Form -->
 		<section class="sign-in">
 			<div class="container">
@@ -37,11 +39,17 @@
 									<input
 									type="text" name="username" id="username"
 									placeholder="User Name" />
+							<%if(login != 0){ %>
+								<label class="error">Username or password does not match.</label>
+							<%}%>
 							</div>
 							<div class="form-group">
 								<input
 									type="password" name="password" id="password"
 									placeholder="Password" />
+							<%if(login != 0){ %>
+								<label class="error">Username or password does not match.</label>
+							<%}%>
 							</div>
 							<div class="form-group">
 								

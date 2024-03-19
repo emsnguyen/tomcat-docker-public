@@ -520,6 +520,11 @@ input {
     border: 1px solid;
 }
 
+label.error{
+		margin-top:10px;
+		font-size: 10px;
+		color: red;
+	}
 @media screen and (max-width: 1200px) {
   .container {
     width: calc( 100% - 30px);

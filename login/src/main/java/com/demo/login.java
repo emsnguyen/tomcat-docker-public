@@ -20,7 +20,6 @@ public class login extends HttpServlet {
             throws ServletException, IOException {
     	String username = request.getParameter("username");
         String password = request.getParameter("password");
-        
         try (Connection conn = DatabaseConnection.getConnection()) {
             String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -32,7 +31,8 @@ public class login extends HttpServlet {
                          session.setAttribute("username", username);
                          response.sendRedirect("home");
                     } else {
-						response.sendRedirect("/login");
+                		request.setAttribute("login", 1);
+                        request.getRequestDispatcher("index.jsp").forward(request, response);
                     }
                 }
             }

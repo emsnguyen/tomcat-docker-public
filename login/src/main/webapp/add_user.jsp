@@ -11,6 +11,9 @@
     <title>User</title>
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/add.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" type="text/javascript"></script>
+	<script src="js/validation.js" type="text/javascript"></script>
     <style>
 	    
     </style>
@@ -35,8 +38,18 @@
     	<%
 		    String source = request.getParameter("source");
     		String userId = request.getParameter("id");
+    		User userParam = (User)new User(0 ,
+    										request.getParameter("username"),
+    										request.getParameter("age")==null ? 0 : Integer.valueOf(request.getParameter("age")), 
+    										request.getParameter("gender"), 
+    										request.getParameter("email"), 
+    										request.getParameter("job"));
+    		String emailExist = request.getParameter("emailExist") == null ? "false" :  request.getParameter("emailExist");
     		User userInfo = (User) request.getAttribute("userInfo");
-		    if ("add".equals(source)) {
+    		if(userInfo == null && emailExist != "false"){
+    			userInfo = userParam;
+    		}
+    		 if ("add".equals(source)) {
 		%>
 		    <h1>Add User</h1>
 		<%  
@@ -50,13 +63,13 @@
 		<% 
 		    }
 		%>
-        <form action="user" method="post" class="form-grid">
+        <form id="userForm" action="user" method="post" class="form-grid">
 	        <div class="form-row">
 	            <div class="form-column">
 	            	<%
 					if (("detail".equals(source)) || ("edit".equals(source))) {
 					%>
-			        	<label id="lb_id">Id:</label>
+			        	<label for="Id" id="lb_id">Id:</label>
 			        	<input type="text" id="userId" name="userId" value="<%=userId%>" readonly style="border: none;">
 					<%
 					} 
@@ -65,11 +78,11 @@
 					if (("detail".equals(source))) {
 					%>
 			        	<label for="Name" id="lb_name" >Name:</label>
-			        	<input type="text" id="name" name="name" value="<%=userInfo==null ? "" : userInfo.getName() %>" readonly style="border: none;">
+			        	<input type="text" value="<%=userInfo==null ? "" : userInfo.getName() %>" readonly style="border: none;">
 			        	<label for="Job" id="lb_job">Job:</label>
-			        	<input type="text" id="job" name="job" value="<%=userInfo==null ? "" :userInfo.getJob()%>" readonly style="border: none;">
+			        	<input type="text" value="<%=userInfo==null ? "" :userInfo.getJob()%>" readonly style="border: none;">
 			        	<label for="Email" id="lb_email">Email:</label>
-			        	<input type="text" id="email" name="email" value="<%=userInfo==null ? "" : userInfo.getEmail()%>" readonly style="border: none;">
+			        	<input type="text" value="<%=userInfo==null ? "" : userInfo.getEmail()%>" readonly style="border: none;">
 		        	<%
 					} else {
 		        	%>
@@ -83,7 +96,12 @@
 							    String selected = "";
 								if (occupations != null) {
 							        for (Job occupation : occupations) {
-							        	if(userInfo!=null && userInfo.getJob().equals(occupation.getName())){
+							        	if (emailExist=="true"){
+							        		if(userInfo.getJob().equals(String.valueOf(occupation.getIdJob()))){
+								        		selected = "selected";
+								        	}
+							        	}
+							        	else if(userInfo!=null && userInfo.getJob().equals(occupation.getName())){
 							        		selected = "selected";
 							        	}
 							%>
@@ -97,7 +115,10 @@
 						if (("add".equals(source))) {
 						%>
 				        	<label for="email">Email:</label>
-			                <input type="email" id="email" name="email" value="<%=userInfo==null ? "" : userInfo.getEmail() %>" placeholder="Enter email" <%="detail".equals(source) ? "readonly" : "" %>>
+			                <input type="text" id="email" name="email" value="<%=userInfo==null ? "" : userInfo.getEmail() %>" placeholder="Enter email" <%="detail".equals(source) ? "readonly" : "" %>>
+			        		<%if(emailExist.equals("true")){ %>
+								<label class="error">Another user with this email has already existed.</label>
+							<%}%>
 			        	<%
 						}
 					 }

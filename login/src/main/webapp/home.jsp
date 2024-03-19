@@ -11,13 +11,9 @@
     <title>User Search</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="css/home.css">
-   	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" type="text/javascript"></script>
-	<script src="demoValidation.js" type="text/javascript"></script>
-    <style>
-	label.error{
-		color: red;
-	}
-    </style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" type="text/javascript"></script>
+	<script src="js/validation.js" type="text/javascript"></script>
 </head>
 <body>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -82,6 +78,9 @@
                 <input type="number" id="ageForm" name="ageForm"  value="<%= (ageForm != null && ageForm == -1) ? "" : ageForm %>">
 				<label>~</label>
 				<input type="number" id="ageTo" name="ageTo" value="<%= (ageTo != null && ageTo == -1) ? "" : ageTo %>">
+				<%if(request.getAttribute("ageValidate")!=null && request.getAttribute("ageValidate").equals("false")){ %>
+					<label class="error">Age to cannot be bigger than age from.</label>
+				<%}%>
 				<br>
                 <div class="gender-radio">
                 	<label for="gender">Gender:</label>
@@ -178,7 +177,9 @@ function add_user() {
 }
 
 function GoDetail(userId) {
-	<%int currentPages = (int) request.getAttribute("currentPage");%>
+	<%
+		int currentPages = (int) request.getAttribute("currentPage");
+	%>
     window.location.href = "user?source=detail&id="+userId+"&page="+<%=currentPages%>;
 }
 </script>

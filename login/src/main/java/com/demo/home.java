@@ -153,7 +153,7 @@ public class home extends HttpServlet {
                 stmt.setInt(parameterIndex++, ageForm);
                 stmtCount.setInt(parameterIndex2++, ageForm);
             }
-            if (ageTo > ageForm) {
+            if (ageTo > 0) {
                 stmt.setInt(parameterIndex++, ageTo);
                 stmtCount.setInt(parameterIndex2++, ageTo);
             }
@@ -250,7 +250,6 @@ public class home extends HttpServlet {
         	jobId = Integer.parseInt(request.getParameter("job"));
         }
         
-        
         int recordsPerPage = 5;
         int currentPage = 1; 
         String currentPageParam = request.getParameter("currentPage");
@@ -258,7 +257,24 @@ public class home extends HttpServlet {
             currentPage = Integer.parseInt(currentPageParam);
         }
         int start = currentPage * recordsPerPage - recordsPerPage;
-        List<User> searchResults = searchUserList(start, recordsPerPage,name, age, ageTo, gender, email, jobId);
+        
+        List<User> searchResults = new ArrayList<User>();
+        if (ageParameter != null && !ageParameter.isEmpty() && ageParameterTo != null && !ageParameterTo.isEmpty()) {
+        	if (age>ageTo) {
+        		searchResults = getUserInfo(start, recordsPerPage);
+        		searchTotal = getTotalRecords();
+        		request.setAttribute("ageValidate", "false");
+        	}
+        	else {
+        		searchResults = searchUserList(start, recordsPerPage,name, age, ageTo, gender, email, jobId);
+        	}
+        }
+        else {
+        	searchResults = searchUserList(start, recordsPerPage,name, age, ageTo, gender, email, jobId);
+        	
+        }
+        	
+        
         int totalPages = (int) Math.ceil((double) searchTotal / recordsPerPage);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currentPage", currentPage);

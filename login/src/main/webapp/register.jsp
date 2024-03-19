@@ -14,31 +14,36 @@
 	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" type="text/javascript"></script>
 	<script src="js/validation.js" type="text/javascript"></script>
     <style>
-	label.error{
-		color: red;
-	}
+	
     </style>
 </head>
 <body>
 
 	<div class="main">
-
+		<%
+			int userExist = request.getAttribute("userExist") == null ? 0 : (int) request.getAttribute("userExist");
+			String name = request.getAttribute("name") == null ? "" : (String) request.getAttribute("name");
+			String mail = request.getAttribute("mail") == null ? "" : (String) request.getAttribute("mail");
+		%>
 		<!-- Sign up form -->
 		<section class="signup">
 			<div class="container">
 				<div class="signup-content">
 					<div class="signup-form">
 						<h2 class="form-title">Sign up</h2>
-					
+						
 						<form action="register" method="post" class="register-form"
 							id="register-form">
 							<div class="form-group">
 							<input
-									type="text" name="name" id="name" placeholder="Your Name" />
+									type="text" name="name" id="name" value="<%=name%>" placeholder="Your Name" />
 							</div>
 							<div class="form-group">
 							<input
 									type="text" name="username" id="username" placeholder="User name" />
+							<%if(userExist != 0){ %>
+								<label class="error">Another user with this username has already existed.</label>
+							<%}%>
 							</div>
 							<div class="form-group">
 							<input
@@ -50,7 +55,7 @@
 							</div>
 							<div class="form-group">
 								<input type="text" name="contact" id="contact"
-									placeholder="Email" />
+									placeholder="Email" value = "<%=mail%>"/>
 							</div>
 							<div class="form-group">
 								<input type="checkbox" name="agree-term" id="agree-term"
