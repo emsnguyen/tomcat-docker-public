@@ -35,7 +35,7 @@
 					<div class="signin-form">
 						<h2 class="form-title">Login</h2>
 						<form method="post" action="loginServlet" class="register-form"
-							id="login-form" onsubmit="return validateForm()">
+							id="login-form" >
 							<div class="form-group">
 								<input type="text" name="email" id="email"
 									placeholder="Your Email" /> <span id="email-error"
@@ -49,7 +49,7 @@
 							 <span id="not-found-error"
 									class="error-message"></span>
 							<div class="form-group form-button">
-								<input type="submit" name="signin" id="signin"
+								<input type=button name="signin" id="signin"
 									class="form-submit" value="Log in" />
 							</div>
 						</form>

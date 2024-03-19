@@ -2,8 +2,9 @@
 
 //-- Login Form --//
 $(document).ready(function() {
-    $('#login-form').submit(function(event) {
-        event.preventDefault(); // Ngăn chặn sự kiện submit mặc định
+    $('#signin').click(function(event) {
+        /*event.preventDefault(); */
+        // Ngăn chặn sự kiện submit mặc định
 
         var email = $('#email').val();
         var password = $('#password').val();
@@ -18,11 +19,9 @@ $(document).ready(function() {
                 success: function(response) {
                     if (response === 'notfound') {
                         $('#not-found-error').text('Email or password does not match');
-                    } else {
-                        // Kiểm tra xem có lỗi nào khác không
-                        if ($('#login-form').valid()) {
-                            $('#login-form').unbind('submit').submit(); // Gửi form nếu không có lỗi
-                        }
+                    } 
+                    else {
+                        $('#login-form').unbind('submit').submit();
                     }
                 }
             });
@@ -134,3 +133,185 @@ $(document).ready(function() {
     });
 });
 
+
+//-- Add User Form --//
+$(document).ready(function() {
+    $('#add-user-form').submit(function(event) {
+        event.preventDefault(); // Ngăn chặn sự kiện submit mặc định
+
+        var email = $('#email').val();
+        if (email !== '') {
+            $.ajax({
+                url: '/my-tomcat-app/user/insert', 
+                type: 'POST',
+                data: {
+                    email: email
+                },
+                success: function(response) {
+                    if (response === 'exists') {
+                        $('#exists-error').text("Another user with this email has already existed. Please use another one");
+                    } else {
+                        // Kiểm tra xem có lỗi nào khác không
+                        if ($('#add-user-form').valid()) {
+                            $('#add-user-form').unbind('submit').submit(); // Gửi form nếu không có lỗi
+                        }
+                    }
+                }
+            });
+        }
+    });
+
+    $('#add-user-form').validate({
+        rules: {
+			name: {
+                required: true
+            },
+            job_id: {
+                required: true
+            },
+            email: {
+                required: true,
+                email: true
+            },
+        },
+        messages: {
+			 name: {
+                required: "Please enter your name"
+            },
+             job_id: {
+                required: "Please enter your job"
+            },
+            email: {
+                required: "Please enter your email address",
+                email: "Please enter a valid email address"
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            error.addClass('error-message');
+            error.insertAfter(element);
+        }
+    });
+});
+
+//-- Edit User Form --//
+$(document).ready(function() {
+    $('#edit-user-form').click(function(event) {
+       /* event.preventDefault();*/ // Ngăn chặn sự kiện submit mặc định
+		var userId = $('input[name="id"]').val();
+        var updated_at = $('#updated_at').val();
+        if (userId !== '') {
+            $.ajax({
+                url: '/my-tomcat-app/user/update', 
+                type: 'POST',
+                data: {
+					id: userId,
+                    updated_at: updated_at
+                },
+                success: function(response) {
+                    if (response === 'updated') {
+                        $('#exists-error').text("The record was updated while you are editing. Please reload!");
+                    } else {
+                        // Kiểm tra xem có lỗi nào khác không
+                        $('#edit-user-form').unbind('submit').submit(); // Gửi form nếu không có lỗi
+                    }
+                }
+            });
+        }
+    });
+
+    $('#edit-user-form').validate({
+        rules: {
+			name: {
+                required: true
+            },
+            job_id: {
+                required: true
+            },
+            email: {
+                required: true,
+                email: true
+            },
+        },
+        messages: {
+			 name: {
+                required: "Please enter your name"
+            },
+             job_id: {
+                required: "Please enter your job"
+            },
+            email: {
+                required: "Please enter your email address",
+                email: "Please enter a valid email address"
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            error.addClass('error-message');
+            error.insertAfter(element);
+        }
+    });
+});
+
+//-- Delete User Form --//
+$(document).ready(function() {
+    $('#deleteEmployeeModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id'); 
+        var updated_at =  button.data('updated_at'); 
+        $.ajax({
+            url: '/my-tomcat-app/user/delete', 
+            type: 'POST',
+            data: {
+                id: id,
+                updated_at: updated_at
+            },
+            success: function(response) {
+               if (response === 'updated') {
+				    $('.modal-footer').hide();
+                    $('#exists-error').text("The record was updated while you are editing. Please reload!");
+                } 
+            },
+            error: function(xhr, status, error) {
+                // Xử lý lỗi (nếu có)
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+
+
+
+//-- Search Form --//
+$.validator.addMethod("maxAgeGreaterThanMin", function(value, element) {
+    var minAge = $('#minAge').val();
+    var maxAge = $('#maxAge').val();
+    if (minAge !== '' && maxAge !== '') {
+        return parseInt(minAge) < parseInt(maxAge);
+    }
+    $('#age-error').text('Age to cannot be bigger than age from.'); // Đặt nội dung thông báo lỗi
+    return true; // Nếu một trong hai trường rỗng, không cần kiểm tra
+});
+
+
+$(document).ready(function() {
+    $('#search-form').validate({
+        rules: {
+            minAge: {
+                digits: true
+            },
+            maxAge: {
+                digits: true,
+                maxAgeGreaterThanMin: true 
+            }
+        },
+        messages: {
+       
+        },
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            error.addClass('error-message');
+            error.insertAfter(element);
+        }
+    });
+});

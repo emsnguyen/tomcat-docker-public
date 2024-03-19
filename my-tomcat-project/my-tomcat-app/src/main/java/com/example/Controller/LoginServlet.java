@@ -44,10 +44,9 @@ public class LoginServlet extends HttpServlet {
 					String dbPassword = rs.getString("password");
 
 					if (email.equals(dbEmail) && password.equals(dbPassword)) {
-						System.out.println("Login successfully.");
-
 						HttpSession httpSession = request.getSession();
 						httpSession.setAttribute("email", email);
+						System.out.println("Login successfully.");						
 						response.sendRedirect("/my-tomcat-app/home");
 					} else {
 						System.out.println("Login failed: Username or password does not match.");

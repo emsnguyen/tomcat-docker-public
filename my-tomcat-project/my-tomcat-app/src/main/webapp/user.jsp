@@ -5,12 +5,12 @@
 <div class="container">
 	<div class="modal-content">
 		<c:if test="${userExist != null}">
-			<form action="/my-tomcat-app/user/update" method="post"
+			<form id="edit-user-form" action="/my-tomcat-app/user/update" method="post"
 				onsubmit="return validateForm()">
 		</c:if>
 		<c:if test="${userExist == null}">
-			<form action="/my-tomcat-app/user/insert" method="post"
-				onsubmit="return validateForm()">
+			<form id="add-user-form" action="/my-tomcat-app/user/insert" method="post"
+				>
 		</c:if>
 		<div class="modal-header">
 			<c:if test="${userExist != null}">
@@ -25,7 +25,7 @@
 				<div class='col-6'>
 					<c:if test="${userExist != null}">
 						<input type="hidden" name="id"
-							value="<c:out value='${userExist.id}' />" readonly />
+							value="<c:out value='${userExist.id}' />" />
 						<div class="form-group">
 							<h6>Id</h6>
 						</div>
@@ -37,7 +37,8 @@
 						<h6>Name</h6>
 						<input type="text" name="name"
 							value="<c:out value='${userExist.name}' />" class="form-control"
-							required>
+							>
+							<span id="name-error" class="error-message"></span>
 					</div>
 
 					<div class="form-group">
@@ -55,6 +56,7 @@
 								</c:choose>
 							</c:forEach>
 						</select>
+						<span id="job-error" class="error-message"></span>
 					</div>
 
 					<c:if test="${userExist == null}">
@@ -62,8 +64,9 @@
 							<h6>Email</h6>
 							<input name="email" id="email"
 								value="<c:out value='${userExist.email}' />"
-								class="form-control" required> <span id="email-error"
-								class="error-message"></span>
+								class="form-control" > 
+								<span id="email-error" class="error-message"></span>
+								<span id="exists-error" class="error-message"></span>
 						</div>
 					</c:if>
 				</div>
@@ -106,9 +109,16 @@
 							<h6>Email</h6>
 							<input name="email" id="email"
 								value="<c:out value='${userExist.email}' />"
-								class="form-control" required> <span id="email-error"
-								class="error-message"></span>
+								class="form-control" required> <span id="email-error" class="error-message"></span>
+								<span id="exists-error" class="error-message"></span>
 						</div>
+						<div class='col-6'>
+						    <div class="form-group">
+						        <h6>Update Date</h6>
+						        <input type="hidden" name="updated_at" id="updated_at" value="<c:out value='${userExist.updated_at}' />" class="form-control">
+						    </div>
+						</div>
+						
 					</c:if>
 				</div>
 			</div>

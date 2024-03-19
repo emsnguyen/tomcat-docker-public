@@ -8,13 +8,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
+
 public class UserDAO {
     private Connection con;
-
     public UserDAO(Connection con) throws SQLException {
         this.con = DBManager.getConnection();
     }
-
+    
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM user WHERE is_delete = 0 ORDER BY id DESC";
@@ -54,6 +56,7 @@ public class UserDAO {
                 user.setGender(rs.getBoolean("gender"));
                 user.setJob_id(rs.getInt("job_id"));
                 user.setAge(rs.getInt("age"));
+                
                 users.add(user);
             }
         }
@@ -76,10 +79,17 @@ public class UserDAO {
                 user.setGender(rs.getBoolean("gender"));
                 user.setJob_id(rs.getInt("job_id"));
                 user.setAge(rs.getInt("age"));
+                user.setCreated_at((rs.getTimestamp("created_at")));
+                user.setCreated_by(rs.getString("created_by"));
+                user.setUpdated_at((rs.getTimestamp("updated_at")));
+                user.setUpdated_by(rs.getString("updated_by"));
+                user.setDeleted_at((rs.getTimestamp("deleted_at")));
+                user.setDeleted_by(rs.getString("deleted_by"));
             }
         }
         return user;
     }
+    
 
     public List<User> searchUsers(User searchCriteria, int minAge, int maxAge)
             throws SQLException {
@@ -178,8 +188,12 @@ public class UserDAO {
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getContact());
             ps.setBoolean(5, user.getGender());
-            ps.setInt(6, user.getJob_id());
-            ps.setInt(7, user.getAge());
+            if(user.getJob_id() > 0) {
+            	ps.setInt(6, user.getJob_id());
+            }
+            if(user.getAge() > 0) {
+            	ps.setInt(7, user.getAge());
+            }
             ps.setInt(8, user.getId()); // UserID for update
             ps.executeUpdate();
         }

@@ -41,6 +41,11 @@
       <artifactId>json</artifactId>
       <version>20210307</version> <!-- hoặc phiên bản mới nhất hiện có -->
     </dependency>
+    <dependency>
+	    <groupId>com.google.protobuf</groupId>
+	    <artifactId>protobuf-java-util</artifactId>
+	    <version>3.18.0</version> <!-- Phiên bản có thể thay đổi -->
+	</dependency>
   </dependencies>
   <build>
     <finalName>my-tomcat-app</finalName>
