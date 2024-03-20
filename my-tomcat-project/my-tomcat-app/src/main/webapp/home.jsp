@@ -94,55 +94,53 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var rows = document.querySelectorAll('tbody tr');
-        // Kiểm tra xem đã lưu trạng thái dòng được chọn trong sessionStorage chưa
-        var selectedRows = sessionStorage.getItem('selectedRows');
-        if (selectedRows) {
-            selectedRows = JSON.parse(selectedRows);
+document.addEventListener('DOMContentLoaded', function() {
+    var rows = document.querySelectorAll('tbody tr');
+    // Kiểm tra xem đã lưu trạng thái dòng được chọn trong sessionStorage chưa
+    var selectedRows = sessionStorage.getItem('selectedRows');
+    if (selectedRows) {
+        selectedRows = JSON.parse(selectedRows);
+        selectedRows.forEach(function(rowId) {
+            var selectedRow = document.querySelector('tr[data-id="' + rowId + '"]');
+            if (selectedRow) {
+                selectedRow.classList.add('selected');
+            }
+        });
+    } else {
+        selectedRows = []; // Khởi tạo mảng nếu chưa tồn tại
+    }
+    // Bắt sự kiện double click trên dòng
+    rows.forEach(function(row) {
+        row.addEventListener('dblclick', function() {
+            var userId = this.getAttribute('data-id');
+            window.location.href = '/my-tomcat-app/user/detail?id=' + userId;
+            // Lấy danh sách dòng đã được chọn từ sessionStorage
+            // Kiểm tra xem dòng đã được chọn chưa
+            var index = selectedRows.indexOf(userId);
+            if (index === -1) {
+                // Nếu chưa được chọn, thêm vào danh sách
+                selectedRows.push(userId);
+            }
+            // Lưu danh sách các dòng đã được chọn vào sessionStorage
+            sessionStorage.setItem('selectedRows', JSON.stringify(selectedRows));
+            // Loại bỏ lựa chọn trước đó và thêm lựa chọn mới
+            rows.forEach(function(r) {
+                r.classList.remove('selected');
+            });
             selectedRows.forEach(function(rowId) {
                 var selectedRow = document.querySelector('tr[data-id="' + rowId + '"]');
                 if (selectedRow) {
                     selectedRow.classList.add('selected');
                 }
             });
-        }
-        // Bắt sự kiện double click trên dòng
-        rows.forEach(function(row) {
-            row.addEventListener('dblclick', function() {
-                var userId = this.getAttribute('data-id');
-                window.location.href = '/my-tomcat-app/user/detail?id=' + userId;
-                // Lấy danh sách dòng đã được chọn từ sessionStorage
-                var selectedRows = sessionStorage.getItem('selectedRows');
-                if (!selectedRows) {
-                    selectedRows = [];
-                } else {
-                    selectedRows = JSON.parse(selectedRows);
-                }
-                // Kiểm tra xem dòng đã được chọn chưa
-                var index = selectedRows.indexOf(userId);
-                if (index === -1) {
-                    // Nếu chưa được chọn, thêm vào danh sách
-                    selectedRows.push(userId);
-                } else {
-                    // Nếu đã được chọn, loại bỏ khỏi danh sách
-                    selectedRows.splice(index, 1);
-                }
-                // Lưu danh sách các dòng đã được chọn vào sessionStorage
-                sessionStorage.setItem('selectedRows', JSON.stringify(selectedRows));
-                // Loại bỏ lựa chọn trước đó và thêm lựa chọn mới
-                rows.forEach(function(r) {
-                    r.classList.remove('selected');
-                });
-                selectedRows.forEach(function(rowId) {
-                    var selectedRow = document.querySelector('tr[data-id="' + rowId + '"]');
-                    if (selectedRow) {
-                        selectedRow.classList.add('selected');
-                    }
-                });
-            });
         });
     });
+    // Xóa danh sách các dòng đã chọn khi trang được reload
+    window.addEventListener('beforeunload', function() {
+        sessionStorage.removeItem('selectedRows');
+    });
+});
+
 </script>
 
 

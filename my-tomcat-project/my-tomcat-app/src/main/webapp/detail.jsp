@@ -51,7 +51,7 @@
 				</div>
 				
 				<div class="modal-footer">
-					<a href="/my-tomcat-app/user/delete?id=<c:out value='${userExist.id}' />"  class="btn btn-danger">Delete</a>
+					<a id="modal-button-delete" href="/my-tomcat-app/user/delete?id=<c:out value='${userExist.id}' />"  class="btn btn-danger">Delete</a>
 				</div>
 			</div>
 		</div>

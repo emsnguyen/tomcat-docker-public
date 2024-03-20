@@ -90,7 +90,31 @@ public class UserDAO {
         return user;
     }
     
+    public boolean isUserExist(Connection con, String email) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement("SELECT * FROM user WHERE email = ?")) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+    
+    public boolean isEdited(Connection con, int id, String updated_time) throws SQLException {
+        String query = "SELECT updated_at FROM user WHERE id = ? ";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Timestamp dbUpdatedAt = rs.getTimestamp("updated_at");
+                    Timestamp updated_at_timestamp = Timestamp.valueOf(updated_time);
+                    return !dbUpdatedAt.equals(updated_at_timestamp);
+                }
+            }
+        }
+        return false;
+    }
 
+    
     public List<User> searchUsers(User searchCriteria, int minAge, int maxAge)
             throws SQLException {
         List<User> users = new ArrayList<>();
@@ -188,12 +212,8 @@ public class UserDAO {
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getContact());
             ps.setBoolean(5, user.getGender());
-            if(user.getJob_id() > 0) {
-            	ps.setInt(6, user.getJob_id());
-            }
-            if(user.getAge() > 0) {
-            	ps.setInt(7, user.getAge());
-            }
+            ps.setInt(6, user.getJob_id());
+            ps.setInt(7, user.getAge());
             ps.setInt(8, user.getId()); // UserID for update
             ps.executeUpdate();
         }

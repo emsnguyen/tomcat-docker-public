@@ -7,6 +7,8 @@ import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,12 +24,12 @@ import com.example.DAO.UserDAO;
 import com.example.Model.Job;
 import com.example.Model.User;
 
-@WebServlet(urlPatterns = { "/user", "/user/insert", "/user/edit", "/user/update", "/user/delete", "/user/detail", })
+@WebServlet(urlPatterns = { "/user", "/user/insert", "/user/edit", "/user/update", "/user/delete", "/user/detail", "/user/isEdited" })
 public class AddUserServlet extends HttpServlet {
 	private Connection con;
 	private UserDAO userDao;
 	private JobDAO jobDao;
-
+	//	String timeNow ;
 	@Override
 	public void init() throws ServletException {
 		super.init();
@@ -54,6 +56,9 @@ public class AddUserServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		//		LocalDateTime currentTime = LocalDateTime.now();
+		//		timeNow = currentTime.format(formatter);
 		HttpSession session = request.getSession(false);
 		if (session != null && session.getAttribute("email") != null) {
 			String action = request.getServletPath();
@@ -75,6 +80,9 @@ public class AddUserServlet extends HttpServlet {
 				case "/user/detail":
 					showDetailForm(request, response);
 					break;
+				case "/user/isEdited":
+					isEdited(request, response);
+					break;
 				case "/user":
 					showForm(request, response);
 					break;
@@ -86,64 +94,6 @@ public class AddUserServlet extends HttpServlet {
 		} else {
 			response.sendRedirect("/my-tomcat-app/index.jsp");
 		}
-	}
-
-	private boolean isUserExist(Connection con, String email) throws SQLException {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		boolean exist = false;
-		try {
-			ps = con.prepareStatement("SELECT * FROM user WHERE email = ?");
-			ps.setString(1, email);
-			rs = ps.executeQuery();
-			if (rs.next()) {
-				exist = true;
-			}
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				if (ps != null) {
-					ps.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return exist;
-	}
-
-
-
-	private boolean isEdited(Connection con, int id, String updated_at) throws SQLException {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		boolean updated = false;
-		try {
-			ps = con.prepareStatement("SELECT updated_at FROM user WHERE id = ?");
-			ps.setInt(1, id);
-			rs = ps.executeQuery();
-			if (rs.next()) {
-				Timestamp dbUpdatedAt = rs.getTimestamp("updated_at");
-				Timestamp updated_at_timestamp = Timestamp.valueOf(updated_at);
-				if (dbUpdatedAt.equals(updated_at_timestamp)) {
-					updated = true;
-				}
-			}
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				if (ps != null) {
-					ps.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return updated;
 	}
 
 
@@ -191,6 +141,20 @@ public class AddUserServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
+	private void isEdited(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException {
+		int userId = Integer.parseInt(request.getParameter("id"));
+		String updated_at = request.getParameter("updated_at");
+		boolean updated = userDao.isEdited(con, userId, updated_at);
+
+		if (updated) {
+			response.getWriter().write("updated");
+		} else {
+			response.getWriter().write("not_updated");
+		}
+	}
+
+
 	private void createUser(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		HttpSession session = request.getSession(false);
@@ -204,8 +168,9 @@ public class AddUserServlet extends HttpServlet {
 			Integer job_id = parseIntegerParameter(request.getParameter("job_id"));
 			Integer age = parseIntegerParameter(request.getParameter("age"));
 
+			boolean userExist = userDao.isUserExist(con, email);
 
-			if (isUserExist(con, email)) {
+			if (userExist) {
 				response.getWriter().write("exists");
 				return;
 			}
@@ -216,15 +181,8 @@ public class AddUserServlet extends HttpServlet {
 			newUser.setPassword("password");
 			newUser.setContact(contact);
 			newUser.setGender(gender);
-			if(job_id != null && job_id > 0) {
-				newUser.setJob_id(job_id);
-			}
-			if(age != null && age > 0 ) {
-				newUser.setAge(age);
-			}else {
-				newUser.setAge(0);
-			}
-
+			newUser.setJob_id(job_id != null && job_id > 0 ? job_id : 0);
+			newUser.setAge(age != null && age > 0 ? age : 0);
 			newUser.setis_delete(false);
 			newUser.setCreated_by(currentUser);
 
@@ -233,6 +191,7 @@ public class AddUserServlet extends HttpServlet {
 
 		response.sendRedirect("/my-tomcat-app/home");
 	}
+
 
 	private void updateUser(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
@@ -245,17 +204,11 @@ public class AddUserServlet extends HttpServlet {
 			String name = request.getParameter("name");
 			String email = request.getParameter("email");
 			String contact = request.getParameter("contact");
-			String updated_at = request.getParameter("updated_at");
 			boolean gender = "1".equals(request.getParameter("gender"));
 
 			Integer job_id = parseIntegerParameter(request.getParameter("job_id"));
 			Integer age = parseIntegerParameter(request.getParameter("age"));
 
-
-			if (isEdited(con, userId, updated_at)) {
-				response.getWriter().write("updated");
-				return;
-			}
 			User updateUser = new User();
 
 			updateUser.setId(userId);
@@ -263,39 +216,30 @@ public class AddUserServlet extends HttpServlet {
 			updateUser.setEmail(email);
 			updateUser.setPassword("password");
 			updateUser.setContact(contact);
-
-			if(job_id != null && job_id > 0) {
-				updateUser.setJob_id(job_id);
-			}
-			if(age != null && age > 0 ) {
-				updateUser.setAge(age);
-			}else {
-				updateUser.setAge(0);
-			}
+			updateUser.setJob_id(job_id != null && job_id > 0 ? job_id : 0);
+			updateUser.setAge(age != null && age > 0 ? age : 0);
 			updateUser.setGender(gender);
 			updateUser.setUpdated_by(currentUser);
 
 			userDao.updateUser(updateUser);
+
 		}
 		response.sendRedirect("/my-tomcat-app/home");
 	}
+
 
 	private void deleteUser(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		HttpSession session = request.getSession(false);
 		if (session != null && session.getAttribute("email") != null) {
 			String currentUser = (String) session.getAttribute("email");
-			String updated_at = request.getParameter("updated_at");
 			int userId = Integer.parseInt(request.getParameter("id"));
-			if (isEdited(con, userId, updated_at)) {
-				response.getWriter().write("updated");
-				return;
-			}
-			else {
-				User deleteUser = new User();
-				deleteUser.setDeleted_by(currentUser);
-				userDao.deleteUser(userId);
-			}
+
+
+			User deleteUser = new User();
+			deleteUser.setDeleted_by(currentUser);
+			userDao.deleteUser(userId);
+
 		}
 		response.sendRedirect("/my-tomcat-app/home");
 	}

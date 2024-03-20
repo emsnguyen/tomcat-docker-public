@@ -3,7 +3,7 @@
 //-- Login Form --//
 $(document).ready(function() {
     $('#signin').click(function(event) {
-        /*event.preventDefault(); */
+        event.preventDefault();
         // Ngăn chặn sự kiện submit mặc định
 
         var email = $('#email').val();
@@ -139,25 +139,24 @@ $(document).ready(function() {
     $('#add-user-form').submit(function(event) {
         event.preventDefault(); // Ngăn chặn sự kiện submit mặc định
 
-        var email = $('#email').val();
-        if (email !== '') {
-            $.ajax({
-                url: '/my-tomcat-app/user/insert', 
-                type: 'POST',
-                data: {
-                    email: email
-                },
-                success: function(response) {
-                    if (response === 'exists') {
-                        $('#exists-error').text("Another user with this email has already existed. Please use another one");
-                    } else {
-                        // Kiểm tra xem có lỗi nào khác không
-                        if ($('#add-user-form').valid()) {
-                            $('#add-user-form').unbind('submit').submit(); // Gửi form nếu không có lỗi
+        if ($('#add-user-form').valid()) { // Kiểm tra dữ liệu trước khi gửi AJAX
+            var email = $('#email').val();
+            if (email !== '') {
+                $.ajax({
+                    url: '/my-tomcat-app/user/insert', 
+                    type: 'POST',
+                    data: {
+                        email: email
+                    },
+                    success: function(response) {
+                        if (response === 'exists') {
+                            $('#exists-error').text("Another user with this email has already existed. Please use another one");
+                        } else {
+                            $('#add-user-form').unbind('submit').submit();
                         }
                     }
-                }
-            });
+                });
+            }
         }
     });
 
@@ -175,10 +174,10 @@ $(document).ready(function() {
             },
         },
         messages: {
-			 name: {
+			name: {
                 required: "Please enter your name"
             },
-             job_id: {
+            job_id: {
                 required: "Please enter your job"
             },
             email: {
@@ -194,35 +193,38 @@ $(document).ready(function() {
     });
 });
 
+
 //-- Edit User Form --//
 $(document).ready(function() {
-    $('#edit-user-form').click(function(event) {
-       /* event.preventDefault();*/ // Ngăn chặn sự kiện submit mặc định
-		var userId = $('input[name="id"]').val();
-        var updated_at = $('#updated_at').val();
-        if (userId !== '') {
-            $.ajax({
-                url: '/my-tomcat-app/user/update', 
-                type: 'POST',
-                data: {
-					id: userId,
-                    updated_at: updated_at
-                },
-                success: function(response) {
-                    if (response === 'updated') {
-                        $('#exists-error').text("The record was updated while you are editing. Please reload!");
-                    } else {
-                        // Kiểm tra xem có lỗi nào khác không
-                        $('#edit-user-form').unbind('submit').submit(); // Gửi form nếu không có lỗi
+    $('#edit-user-form').submit(function(event) {
+        event.preventDefault();
+         if ($('#edit-user-form').valid()) {
+	        var userId = $('input[name="id"]').val();
+	        var updated_at = $('#updated_at').val();
+	        if (userId !== '') {
+	            $.ajax({
+	                url: '/my-tomcat-app/user/isEdited', 
+	                type: 'POST',
+	                data: {
+	                    id: userId,
+	                    updated_at: updated_at
+	                },
+	                success: function(response) {
+                        if (response === 'updated') {
+                            alert("The record was updated while you are editing. Please reload!");
+                        } else {
+                            $('#exists-error').text("");
+                            $('#edit-user-form').unbind('submit').submit(); // Gửi form nếu không có lỗi
+                        }
                     }
-                }
-            });
+	            });
+        	}
         }
     });
 
     $('#edit-user-form').validate({
         rules: {
-			name: {
+            name: {
                 required: true
             },
             job_id: {
@@ -234,10 +236,10 @@ $(document).ready(function() {
             },
         },
         messages: {
-			 name: {
+            name: {
                 required: "Please enter your name"
             },
-             job_id: {
+            job_id: {
                 required: "Please enter your job"
             },
             email: {
@@ -253,32 +255,45 @@ $(document).ready(function() {
     });
 });
 
+
+
 //-- Delete User Form --//
 $(document).ready(function() {
     $('#deleteEmployeeModal').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget);
-        var id = button.data('id'); 
-        var updated_at =  button.data('updated_at'); 
+        var id = button.data('id');
+        var updated_at = button.data('updated_at');
+
+        $('#modal-button-delete').data('id', id);
+        $('#modal-button-delete').data('updated_at', updated_at);
+    });
+
+    $('#modal-button-delete').click(function(event) {
+        event.preventDefault();
+
+        var id = $(this).data('id');
+        var updated_at = $(this).data('updated_at');
+
         $.ajax({
-            url: '/my-tomcat-app/user/delete', 
+            url: '/my-tomcat-app/user/isEdited',
             type: 'POST',
             data: {
                 id: id,
                 updated_at: updated_at
             },
             success: function(response) {
-               if (response === 'updated') {
-				    $('.modal-footer').hide();
-                    $('#exists-error').text("The record was updated while you are editing. Please reload!");
-                } 
-            },
-            error: function(xhr, status, error) {
-                // Xử lý lỗi (nếu có)
-                console.error(xhr.responseText);
+                if (response === 'updated') {
+                    alert("The record was updated while you are editing. Please reload!");
+                    window.location.href = '/my-tomcat-app/home';
+                }else{
+					 window.location.href = '/my-tomcat-app/user/delete?id=' + id;
+				}
             }
         });
     });
 });
+
+
 
 
 
