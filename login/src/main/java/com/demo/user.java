@@ -226,7 +226,7 @@ public class user extends HttpServlet {
 	        			out.println("<html><head><title>Popup</title></head><body>");
 	        		    out.println("<script>");
 	        		    out.println("alert('The record was updated while you are editing. Please reload!');");
-	        		    out.println("window.location.href = 'user?source=detail&id="+id+ "&page=" + page +"';");
+	        		    out.println("window.location.href = 'home';");
 	        		    out.println("</script>");
 	        		    out.println("</body></html>");
 	        		} catch (IOException e) {
